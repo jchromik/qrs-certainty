@@ -1,0 +1,6 @@
+from detectors.garcia_berdones_detector import GarciaBerdonesDetector
+from detectors.pan_tompkins_detector import PanTompkinsDetector
+from detectors.sarlija_detector import SarlijaDetector
+from detectors.wfdb_gqrs_detector import WfdbGQRSDetector
+from detectors.wfdb_xqrs_detector import WfdbXQRSDetector
+from detectors.xiang_detector import XiangDetector
