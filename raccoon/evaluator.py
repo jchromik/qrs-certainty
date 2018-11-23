@@ -49,8 +49,8 @@ class Evaluator():
             "\tWriting to: {}".format(self.output_dir),
             "\tReading {} samples per signal.".format(self.sampto),
             "\tMaximum allowed distance between actual and detected trigger " +
-            "points: {} samples".format(self.actual_detected_distance)
-        ])
+            "points: {} samples".format(self.actual_detected_distance),
+            "\tScikit-learn Cross Validation Method: {}".format(self.cval)])
 
     # PRIVATE DATA ACCESSING HELPERS 
 
@@ -86,29 +86,32 @@ class Evaluator():
     # PUBLIC EVALUATION INTERFACE
 
     def kfold(self, k):
-        return self._eval_cross_validator(KFold(n_splits=k))
+        self.cval = KFold(n_splits=k)
+        return self._eval_cross_validator()
 
     def loocv(self):
-        return self._eval_cross_validator(LeaveOneOut())
+        self.cval = LeaveOneOut()
+        return self._eval_cross_validator()
 
     def defined(self, test_records):
         test_idx = [self.records.index(record) for record in test_records]
         test_fold = [-1]*len(self.records)
         for idx in test_idx: test_fold[idx] = 0
-        return self._eval_cross_validator(PredefinedSplit(test_fold))
+        self.cval = PredefinedSplit(test_fold)
+        return self._eval_cross_validator()
 
     # PRIVATE EVALUATION FUNCTIONS
 
-    def _eval_cross_validator(self, cval):
-        reports = self._eval_detectors(cval)
+    def _eval_cross_validator(self):
+        reports = self._eval_detectors()
         self._save_header()
         self._save_reports(reports)
         self._print_reports(reports)
         return reports
 
-    def _eval_detectors(self, cval):
+    def _eval_detectors(self):
         reports = []
-        splits = cval.split(self.records)
+        splits = self.cval.split(self.records)
         combinations = product(self.detectors, splits)
         for eval_id, combination in enumerate(combinations):
             detector, split = combination
