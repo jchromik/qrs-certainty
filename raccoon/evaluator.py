@@ -134,8 +134,14 @@ class Evaluator():
     # SAVING AND PRINTING
 
     def _save_header(self):
-        header = str(self) + "\n\n" + "\n".join(
-            [str(detector) for detector in self.detectors])
+        header = (
+            str(self)
+            + "\n\n\nDETECTORS:\n\n"
+            + "\n".join(
+                [str(detector) for detector in self.detectors])
+            + "\n\n\nRECORDS:\n\n"
+            + ", ".join(self.records)
+            + "\n")
         with open("{}/header.txt".format(self.output_dir), 'w') as f:
             f.write(header)
 

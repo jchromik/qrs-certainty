@@ -33,10 +33,11 @@ class XiangDetector(NNDetector):
     def __str__(self):
         return "\n".join([
             repr(self),
+            "\tBatch Size: {}".format(self.batch_size),
             "\tWindow Size: {}".format(self.window_size),
             "\tDetection Size: {}".format(self.detection_size),
-            "\tAux Ration: {}".format(self.aux_ratio)
-        ])
+            "\tAux Ration: {}".format(self.aux_ratio),
+            "\tTraining Epochs: {}".format(self.epochs)])
 
     def _build_model(self):
         visible1 = Input(shape=(60, 1))

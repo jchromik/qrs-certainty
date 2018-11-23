@@ -16,7 +16,9 @@ class WfdbXQRSDetector(NonNNDetector):
         return "WFDB XQRS Detector"
 
     def __str__(self):
-        return repr(self)
+        return "\n".join([
+            repr(self),
+            "\tSignal Frequency: {}".format(self.signal_freq)])
 
     # QRSDetector interface
 

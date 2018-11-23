@@ -31,9 +31,10 @@ class SarlijaDetector(NNDetector):
     def __str__(self):
         return "\n".join([
             repr(self),
+            "\tBatch Size: {}".format(self.batch_size),
             "\tWindow Size: {}".format(self.window_size),
-            "\tDetection Size: {}".format(self.detection_size)
-        ])
+            "\tDetection Size: {}".format(self.detection_size),
+            "\tTraining Epochs: {}".format(self.epochs)])
 
     def _build_model(self):
         model = Sequential()

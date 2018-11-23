@@ -27,8 +27,9 @@ class GarciaBerdonesDetector(NNDetector):
     def __str__(self):
         return "\n".join([
             repr(self),
-            "\tWindow Size: {}".format(self.window_size)
-        ])
+            "\tBatch Size: {}".format(self.batch_size),
+            "\tWindow Size: {}".format(self.window_size),
+            "\tTraining Epochs: {}".format(self.epochs)])
 
     def _build_model(self):
         model = Sequential()

@@ -28,8 +28,12 @@ class PanTompkinsDetector(NonNNDetector):
     def __str__(self):
         return "\n".join([
             repr(self),
-            "\tMoving Window Size: {}".format(self.moving_window_size)
-        ])
+            "\tSignal Frequency: {}".format(self.signal_freq),
+            "\tMoving Window Size: {}".format(self.moving_window_size),
+            "\tButterworth Bandpass Filter Lowcut: {}".format(LOWCUT),
+            "\tButterworth Bandpass Filter Highcut: {}".format(HIGHCUT),
+            "\tButterworth Bandpass Filter Order: {}".format(BUTTER_ORDER),
+            "\tPeak Detection Threshold: {}".format(IDX_THRESHOLD)])
 
     # QRSDetector interface
 
