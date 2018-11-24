@@ -16,8 +16,8 @@ class NNDetector(QRSDetector):
         pass
 
     @abstractmethod
-    def _trigger_signal(self, ecg_signal):
-        """Use trained model to generate a trigger signal from an ECG signal."""
+    def _trigger_signal(self, records):
+        """Use trained model to generate a trigger signal from an ECG recording."""
         pass
 
     # Common implementations
@@ -30,18 +30,18 @@ class NNDetector(QRSDetector):
         """Save trained model with weights to file."""
         self.model.save(path)
 
-    def trigger_signals(self, ecg_signals):
-        """Generate (multiple) trigger signals for (multiple) ECG signals."""
-        return [self._trigger_signal(signal) for signal in ecg_signals]
+    def trigger_signals(self, records):
+        """Generate (multiple) trigger signals for (multiple) ECG recordings."""
+        return [self._trigger_signal(record) for record in records]
 
-    def detect(self, ecg_signals):
-        """Find trigger points in (multiple) ECG signals."""
+    def detect(self, records):
+        """Find trigger points in (multiple) ECG recordings."""
         return [
-            signal_to_points(self._trigger_signal(signal))
-            for signal in ecg_signals]
+            signal_to_points(self._trigger_signal(record))
+            for record in records]
 
-    def triggers_and_signals(self, ecg_signals):
-        trigger_signals = self.trigger_signals(ecg_signals)
+    def triggers_and_signals(self, records):
+        trigger_signals = self.trigger_signals(records)
         return (
             trigger_signals,
             [signal_to_points(ts) for ts in trigger_signals])

@@ -5,7 +5,7 @@ from detectors.qrs_detector import QRSDetector
 
 class NonNNDetector(QRSDetector):
 
-    def train(self, ecg_signals, trigger_points):
+    def train(self, records, triggers):
         """Do nothing since this is not machine learning."""
         pass
 

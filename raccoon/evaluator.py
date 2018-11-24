@@ -34,7 +34,6 @@ class Evaluator():
         # instance variables set later on
         self.detectors = []
         self.records = []
-        self.signals = []
         self.triggers = []
         # instance variables having default values
         self.plot_xlim = 10000
@@ -58,15 +57,11 @@ class Evaluator():
         record_path = '/'.join([self.input_dir, record_name])
         record = wfdb.rdrecord(record_path, sampto=self.sampto)
         annotation = wfdb.rdann(record_path, 'atr', sampto=self.sampto)
-        signal = record.p_signal.T[0]
         trigger = trigger_points(annotation)
-        return signal, trigger
+        return record, trigger
 
     def _records(self, idxs):
         return _select(self.records, idxs)
-
-    def _signals(self, idxs):
-        return _select(self.signals, idxs)
     
     def _triggers(self, idxs):
         return _select(self.triggers, idxs)
@@ -78,9 +73,8 @@ class Evaluator():
     
     def add_records(self, *record_names):
         for record_name in record_names:
-            self.records.append(record_name)
-            signal, trigger = self._read_record(record_name)
-            self.signals.append(signal)
+            record, trigger = self._read_record(record_name)
+            self.records.append(record)
             self.triggers.append(trigger)
 
     # PUBLIC EVALUATION INTERFACE
@@ -122,8 +116,8 @@ class Evaluator():
     def _eval_detector(self, eval_id, detector, train, test):
         evaluation = Evaluation(
             self.output_dir, eval_id, detector,
-            self._records(train), self._signals(train), self._triggers(train),
-            self._records(test), self._signals(test), self._triggers(test),
+            self._records(train), self._triggers(train),
+            self._records(test), self._triggers(test),
             self.actual_detected_distance)
         
         evaluation.run()
@@ -143,7 +137,7 @@ class Evaluator():
             + "\n".join(
                 [str(detector) for detector in self.detectors])
             + "\n\n\nRECORDS:\n\n"
-            + ", ".join(self.records)
+            + ", ".join([record.record_name for record in self.records])
             + "\n")
         with open("{}/header.txt".format(self.output_dir), 'w') as f:
             f.write(header)

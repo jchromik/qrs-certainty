@@ -3,22 +3,22 @@ from abc import ABC, abstractmethod
 class QRSDetector(ABC):
 
     @abstractmethod
-    def train(self, ecg_signals, trigger_points):
+    def train(self, records, triggers):
         """Use input as training data to train model."""
         pass
 
     @abstractmethod
-    def trigger_signals(self, ecg_signals):
+    def trigger_signals(self, records):
         """Generate a trigger signal as intermediate representation.""" 
         pass
 
     @abstractmethod
-    def detect(self, ecg_signals):
+    def detect(self, records):
         """Return a list of positions where QRS complexes are detected."""
         pass
 
     @abstractmethod
-    def triggers_and_signals(self, ecg_signals):
+    def triggers_and_signals(self, records):
         """Returns list of QRS positions and trigger signal with one prediction
         step. Like trigger_signal and detect combined. More efficient than
         calling trigger_signals and detect independently.

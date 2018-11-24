@@ -45,16 +45,18 @@ class GarciaBerdonesDetector(NNDetector):
 
     # QRSDetector interface
 
-    def train(self, ecg_signals, trigger_points):
+    def train(self, records, triggers):
+        ecg_signals = [record.p_signal.T[0] for record in records]
         self.history = self.model.fit_generator(
             generator = WindowGenerator(
-                ecg_signals, self.batch_size, self.window_size, trigger_points),
+                ecg_signals, self.batch_size, self.window_size, triggers),
             shuffle=True, epochs=self.epochs,
             use_multiprocessing=True, workers=16, max_queue_size=16)
 
     # NNDetector interface
 
-    def _trigger_signal(self, ecg_signal):
+    def _trigger_signal(self, record):
+        ecg_signal = record.p_signal.T[0]
         predictions = self.model.predict_generator(
             generator = WindowGenerator(
                 [ecg_signal], self.batch_size, self.window_size),

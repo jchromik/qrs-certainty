@@ -7,32 +7,25 @@ from wfdb import processing
 
 class WfdbXQRSDetector(NonNNDetector):
 
-    # Initializaion
-
-    def __init__(self, signal_freq):
-        self.signal_freq = signal_freq
-
     def __repr__(self):
         return "WFDB XQRS Detector"
 
     def __str__(self):
-        return "\n".join([
-            repr(self),
-            "\tSignal Frequency: {}".format(self.signal_freq)])
+        return repr(self)
 
     # QRSDetector interface
 
-    def trigger_signals(self, ecg_signals):
+    def trigger_signals(self, records):
         """No trigger signals generated here."""
-        return [[] for signal in ecg_signals]
+        return [[] for record in records]
 
-    def detect(self, ecg_signals):
+    def detect(self, records):
         return [
             processing.xqrs_detect(
-                sig = signal,
-                fs = self.signal_freq,
+                sig = record.p_signal.T[0],
+                fs = record.fs,
                 verbose = False)
-            for signal in ecg_signals]
+            for record in records]
 
-    def triggers_and_signals(self, ecg_signals):
-        return (self.trigger_signals(ecg_signals), self.detect(ecg_signals))
+    def triggers_and_signals(self, records):
+        return (self.trigger_signals(records), self.detect(records))

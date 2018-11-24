@@ -126,9 +126,9 @@ eval = Evaluator(
 )
 
 eval.add_detectors(
-    WfdbGQRSDetector(128),
-    WfdbXQRSDetector(128),
-    PanTompkinsDetector(128, 10),
+    WfdbGQRSDetector(),
+    WfdbXQRSDetector(),
+    PanTompkinsDetector(10),
     GarciaBerdonesDetector(32, 20, epochs=args.epochs, gpus=args.gpus),
     SarlijaDetector(32, 50, 10, epochs=args.epochs, gpus=args.gpus),
     XiangDetector(32, 60, 10, 5, epochs=args.epochs, gpus=args.gpus)

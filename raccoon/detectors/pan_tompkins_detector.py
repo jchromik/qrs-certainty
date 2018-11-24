@@ -18,8 +18,7 @@ class PanTompkinsDetector(NonNNDetector):
 
     # Initialization
 
-    def __init__(self, signal_freq, moving_window_size):
-        self.signal_freq = signal_freq
+    def __init__(self, moving_window_size):
         self.moving_window_size = moving_window_size
 
     def __repr__(self):
@@ -28,7 +27,6 @@ class PanTompkinsDetector(NonNNDetector):
     def __str__(self):
         return "\n".join([
             repr(self),
-            "\tSignal Frequency: {}".format(self.signal_freq),
             "\tMoving Window Size: {}".format(self.moving_window_size),
             "\tButterworth Bandpass Filter Lowcut: {}".format(LOWCUT),
             "\tButterworth Bandpass Filter Highcut: {}".format(HIGHCUT),
@@ -37,24 +35,24 @@ class PanTompkinsDetector(NonNNDetector):
 
     # QRSDetector interface
 
-    def trigger_signals(self, ecg_signals):
-        return [self.__pt_signal(signal) for signal in ecg_signals]
+    def trigger_signals(self, records):
+        return [self.__pt_signal(record) for record in records]
 
-    def detect(self, ecg_signals):
+    def detect(self, records):
         return [
-            self.__pt_indexes(self.__pt_signal(signal))
-            for signal in ecg_signals]
+            self.__pt_indexes(self.__pt_signal(record))
+            for record in records]
 
-    def triggers_and_signals(self, ecg_signals):
-        trigger_signals = self.trigger_signals(ecg_signals)
+    def triggers_and_signals(self, records):
+        trigger_signals = self.trigger_signals(records)
         return (
             trigger_signals,
             [self.__pt_indexes(ts) for ts in trigger_signals])
 
     # Private
 
-    def __pt_signal(self, ecg_signal):
-        signal = self.__bandpass_filter(ecg_signal)
+    def __pt_signal(self, record):
+        signal = self.__bandpass_filter(record.p_signal.T[0], record.fs)
         signal = np.ediff1d(signal)
         signal = signal ** 2
         return np.convolve(signal, np.ones(self.moving_window_size), CONVOLVE_MODE)
@@ -62,8 +60,8 @@ class PanTompkinsDetector(NonNNDetector):
     def __pt_indexes(self, pt_signal):
         return pu.indexes(pt_signal, thres=IDX_THRESHOLD, min_dist=self.moving_window_size)
 
-    def __bandpass_filter(self, signal):
-        nyquist_freq = self.signal_freq / 2
+    def __bandpass_filter(self, signal, fs):
+        nyquist_freq = fs / 2
         low = LOWCUT / nyquist_freq
         high = HIGHCUT / nyquist_freq
         b, a = butter(BUTTER_ORDER, [low, high], btype='band')

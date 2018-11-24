@@ -59,11 +59,12 @@ class XiangDetector(NNDetector):
 
     # QRSDetector interface
 
-    def train(self, ecg_signals, trigger_points):
+    def train(self, records, triggers):
+        ecg_signals = [record.p_signal.T[0] for record in records]
         gen = WindowGenerator(
             [np.ediff1d(signal) for signal in ecg_signals],
             self.batch_size, self.window_size,
-            tpoints_list = trigger_points,
+            tpoints_list = triggers,
             detection_size = self.detection_size,
             wrap_samples = True,
             aux_signal_list = [self.__aux_signal(s) for s in ecg_signals],
@@ -75,7 +76,8 @@ class XiangDetector(NNDetector):
 
     # NNDetector interface
 
-    def _trigger_signal(self, ecg_signal):
+    def _trigger_signal(self, record):
+        ecg_signal = record.p_signal.T[0]
         predictions = self.model.predict_generator(
             generator = WindowGenerator(
                 [np.ediff1d(ecg_signal)], self.batch_size, self.window_size,
