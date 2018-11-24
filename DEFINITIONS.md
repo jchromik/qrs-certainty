@@ -9,6 +9,9 @@ Consecutive part in a (trigger) signal where all elements are 1.
 * Ripple  
 Elements of value 0 in a part of a signal that could be a 1-spike if it was not for these few 0 valued elements.
 
+* Trigger  
+Synonym for trigger points. When referring to a list of trigger points, the plural of trigger (_triggers_) is used.
+
 * Trigger Points  
 Positions in a Signal where QRS complexes are.
 
