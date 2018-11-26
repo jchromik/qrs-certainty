@@ -87,10 +87,10 @@ class Evaluator():
         self.cval = LeaveOneOut()
         return self._eval_cross_validator()
 
-    def defined(self, test_records):
-        test_idx = [self.records.index(record) for record in test_records]
-        test_fold = [-1]*len(self.records)
-        for idx in test_idx: test_fold[idx] = 0
+    def defined(self, test_record_names):
+        test_fold = [
+            0 if record.record_name in test_record_names else -1
+            for record in self.records]
         self.cval = PredefinedSplit(test_fold)
         return self._eval_cross_validator()
 
