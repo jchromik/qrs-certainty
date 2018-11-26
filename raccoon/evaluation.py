@@ -78,17 +78,22 @@ class Evaluation():
             self._plot_detection(xlim, idx)
 
     def _plot_detection(self, xlim, idx):
+        record_name = self.test_records[idx].record_name
+        ecg_signal = self.test_records[idx].p_signal.T[0]
+        trigger_signal = self.trigger_signals[idx]
+        test_trigger = self.test_triggers[idx]
+        detected_trigger = self.detected_triggers[idx]
+        
         plt.figure(figsize=(xlim // 100, 5))
         plt.xlim((0, xlim))
-        plt.plot(self.test_records[idx].p_signal.T[0])
-        plt.plot(self.trigger_signals[idx])
-        if len(self.test_triggers) > 0:
-            plt.plot(self.test_triggers, [1]*len(self.test_triggers), 'go')
-        if len(self.detected_triggers) > 0:
-            plt.plot(self.detected_triggers, [1]*len(self.detected_triggers), 'ro')
+        plt.plot(ecg_signal)
+        plt.plot(trigger_signal)
+        if len(test_trigger) > 0:
+            plt.plot(test_trigger, [1]*len(test_trigger), 'go')
+        if len(detected_trigger) > 0:
+            plt.plot(detected_trigger, [1]*len(detected_trigger), 'ro')
         plt.savefig("{}/{}_{}_{}.{}".format(
-            self.output_dir, self.id, self.detector_name(),
-            self.test_records[idx].record_name, 'svg'))
+            self.output_dir, self.id, self.detector_name(), record_name, 'svg'))
         plt.close()
 
     # CONVENIENCE
