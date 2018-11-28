@@ -19,7 +19,7 @@ class Evaluator():
 
     def __init__(
         self, input_dir, output_dir, sampto=None,
-        generate_plots=False,
+        plot_limit=0,
         save_annotations=False,
         save_model=False,
         trigger_distance = 5
@@ -33,8 +33,9 @@ class Evaluator():
             output_dir (str): Directory path to write generated files to.
             sampto (int, optional): How many samples are read from records.
                 All samples are read if unspecified.
-            generate_plots (bool, optional): If True, plots are written to
-                output_dir.
+            plot_limit (int, optional): How many samples are plotted. If 0
+                (zero), no plots are generated. Otherwise plots are written
+                to output_dir.
             save_annotations (bool, optional): If True, MIT Annotation files
                 containing trigger points are written to output_dir.
             save_model (bool, optional): If True, HDF5 model files are written
@@ -47,9 +48,9 @@ class Evaluator():
         self.input_dir = input_dir
         self.output_dir = output_dir
         self.sampto = sampto
+        self.plot_limit = plot_limit
         self.save_annotations = save_annotations
         self.save_model = save_model
-        self.generate_plots = generate_plots
         self.trigger_distance = trigger_distance
 
         # instance variables set later on
@@ -58,7 +59,6 @@ class Evaluator():
         self.triggers = []
 
         # instance variables having default values
-        self.plot_xlim = 10000
         self.cval = None
 
         # create output dir if not exists
@@ -171,7 +171,7 @@ class Evaluator():
 
         if self.save_annotations: evaluation.save_annotations()
         if self.save_model: evaluation.save_model()
-        if self.generate_plots: evaluation.plot_detections(self.plot_xlim)
+        if self.plot_limit > 0: evaluation.plot_detections(self.plot_limit)
         
         return evaluation.report()
 

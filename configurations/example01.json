@@ -6,7 +6,6 @@
     "test_records": ["100", "101"],
     "trigger_distance": 5,
     "save_model": false,
-    "generate_plots": false,
     "records": ["100", "101", "102", "103", "104"],
     "sampto": 10000,
     "verbose": false,
