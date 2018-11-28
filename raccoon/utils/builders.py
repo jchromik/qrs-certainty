@@ -21,7 +21,23 @@ ANIMALS = [
     "eagle", "hedgehog", "dragon", "hyena", "falcon", "dove", "ant", "bear",
     "horse", "sheep", "elk", "cow", "wolf", "whale", "dolphin", "shark",
     "platypus", "kangaroo", "koala", "sloth", "seal", "reindeer", "pig",
-    "spider", "octopus", "snail", "mosquito", "fly", "frog", "axolotl"
+    "spider", "octopus", "snail", "mosquito", "fly", "frog", "axolotl",
+    "aardvark", "beaver", "otter", "snake", "python", "anaconda", "goat",
+    "zebra", "rhino", "hippo", "pony", "chicken", "turkey", "turtle", "rat",
+    "tortoise", "porpoise", "butterfly", "caterpillar", "wolverine", "squirrel",
+    "monkey", "ape", "gorilla", "chimpanzee", "bonobo", "baboon", "organgutan",
+    "boar", "cheetah", "katta", "fossa", "jaguar", "leopard", "panther", "orca",
+    "beluga", "ocelot", "mole", "scorpion", "jellyfish", "bat", "harpy", "raven",
+    "bateleur", "owl", "magpie", "macaw", "parrot", "cockatoo", "crocodile",
+    "eel", "nightingale", "dormouse", "worm", "chinchilla", "ferret", "toad",
+    "donkey", "weasel", "coral", "ray", "pelican", "flamingo", "echidna", "kiwi",
+    "ostrich", "emu", "piranha", "seagull", "peacock", "opossum", "llama",
+    "giraffe", "porcupine", "anteater", "capybara", "rabbit", "bunny", "toucan",
+    "duck", "goose", "lynx", "coelacanth", "crab", "squid", "camel", "koi",
+    "catfish", "swordfish", "sailfish", "marlin", "merlin", "chipmunk",
+    "gopher", "groundhog", "baboon", "meerkat", "warthog", "puffin", "gazelle",
+    "antelope", "deer", "shrew", "woodpecker", "crow", "wasp", "bee",
+    "millipede", "centipede"
 ]
 
 class NameBuilder():
