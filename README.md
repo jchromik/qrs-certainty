@@ -37,11 +37,11 @@ For example, for downloading the `mitdb` to a directory called `data`:
 
 ### Run Evaluation
 
-Call `raccoon/run.py` specifying at least a database directory and a directory where generated files (evaluation reports, logs, plots) are to be stored in. Call `raccoon/run.py -h` for help and further CLI parameters.
+Call `run.py` specifying a configuration file. Configurations files tell the evaluator what to do. You can find example configuration files in the `configurations` directory. Feel free to change them according to needs and research questions. Parameters specified in the configuration file are the same the constructors of Evaluator and Detector classes take, so you can use them as reference.
 
 Example call:
 ```shell
-raccoon/run.py data/mitdb generated
+./run.py configurations/example01.json
 ```
 
 ## Which detectors do we compare?
@@ -64,6 +64,6 @@ For each ECG signal, we do have a list of positions telling us where the QRS com
 
 This is done by applying the following rules:
  * A detected QRS complex counts as true positive if there is an actual QRS complex within a given range.
- * A detected QRS complex counts as false positive is there is *no* actual QRS complext within a given range.
+ * A detected QRS complex counts as false positive is there is *no* actual QRS complex within a given range.
  * An actual QRS complex having no detected QRS complex within a given range counts as false negative.
  * There are no true negatives.
