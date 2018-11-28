@@ -25,16 +25,14 @@
             "type": "GarciaBerdonesDetector",
             "batch_size": 32,
             "window_size": 10,
-            "epochs": 3,
-            "gpus": 1
+            "epochs": 3
         },
         {
             "type": "SarlijaDetector",
             "batch_size": 32,
             "window_size": 50,
             "detection_size": 10,
-            "epochs": 3,
-            "gpus": 1
+            "epochs": 3
         },
         {
             "type": "XiangDetector",
@@ -42,8 +40,7 @@
             "window_size": 60,
             "detection_size": 10,
             "aux_ratio": 5,
-            "epochs": 3,
-            "gpu": 1
+            "epochs": 3
         }
     ]
 }

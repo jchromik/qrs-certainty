@@ -15,22 +15,19 @@
             "name": "Mr. Smalls",
             "batch_size": 32,
             "window_size": 10,
-            "epochs": 3,
-            "gpus": 1
+            "epochs": 3
         },
         {
             "type": "GarciaBerdonesDetector",
             "batch_size": 32,
             "window_size": 20,
-            "epochs": 3,
-            "gpus": 1
+            "epochs": 3
         },
         {
             "type": "GarciaBerdonesDetector",
             "batch_size": 32,
             "window_size": 30,
-            "epochs": 3,
-            "gpus": 1
+            "epochs": 3
         }
     ]
 }

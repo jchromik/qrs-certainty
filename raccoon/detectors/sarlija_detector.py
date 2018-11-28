@@ -16,7 +16,7 @@ class SarlijaDetector(NNDetector):
 
     def __init__(
         self, name, batch_size, window_size, detection_size,
-        epochs=1, gpus=1
+        epochs=1, gpus=0
     ):
         self.name = name
         self.batch_size = batch_size
@@ -32,7 +32,8 @@ class SarlijaDetector(NNDetector):
             "\tBatch Size: {}".format(self.batch_size),
             "\tWindow Size: {}".format(self.window_size),
             "\tDetection Size: {}".format(self.detection_size),
-            "\tTraining Epochs: {}".format(self.epochs)])
+            "\tTraining Epochs: {}".format(self.epochs),
+            "\tNumber of GPUs used: {}".format(self.gpus)])
 
     def _build_model(self):
         model = Sequential()

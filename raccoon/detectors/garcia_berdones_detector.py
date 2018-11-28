@@ -14,7 +14,7 @@ class GarciaBerdonesDetector(NNDetector):
 
     # Initialization
 
-    def __init__(self, name, batch_size, window_size, epochs=1, gpus=1):
+    def __init__(self, name, batch_size, window_size, epochs=1, gpus=0):
         self.name = name
         self.batch_size = batch_size
         self.window_size = window_size
@@ -27,7 +27,8 @@ class GarciaBerdonesDetector(NNDetector):
             repr(self),
             "\tBatch Size: {}".format(self.batch_size),
             "\tWindow Size: {}".format(self.window_size),
-            "\tTraining Epochs: {}".format(self.epochs)])
+            "\tTraining Epochs: {}".format(self.epochs),
+            "\tNumber of GPUs used: {}".format(self.gpus)])
 
     def _build_model(self):
         model = Sequential()
