@@ -22,10 +22,27 @@ class Evaluator():
         generate_plots=False,
         save_annotations=False,
         save_model=False,
-        trigger_distance = 5,
-        cv_method = "loocv",
-        test_records = []
+        trigger_distance = 5
     ):
+        """The Evaluator compares different Detectors by first providing them
+        with training records and subsequently testing their performace on
+        other records.
+
+        Args:
+            input_dir (str): Directory path to read records from.
+            output_dir (str): Directory path to write generated files to.
+            sampto (int, optional): How many samples are read from records.
+                All samples are read if unspecified.
+            generate_plots (bool, optional): If True, plots are written to
+                output_dir.
+            save_annotations (bool, optional): If True, MIT Annotation files
+                containing trigger points are written to output_dir.
+            save_model (bool, optional): If True, HDF5 model files are written
+                to output_dir. (Only for neural network based detectors.)
+            trigger_distance (int, optional): How far (in samples) detected and
+                actual trigger points can be apart from each other to be
+                recognized as 'correctly detected' (true positive).
+        """
         # instance variable set with constructor
         self.input_dir = input_dir
         self.output_dir = output_dir
@@ -89,14 +106,35 @@ class Evaluator():
     # PUBLIC EVALUATION INTERFACE
 
     def kfold(self, k):
+        """Perform k-fold cross-validation with previously specified detectors
+        on previously specified records.
+        
+        Args:
+            k (int): Number of iterations/splits.
+        """
         self.cval = KFold(n_splits=k)
         return self._eval_cross_validator()
 
     def loocv(self):
+        """Perform leave-one-out cross-validation with previously specified
+        detectors on previously specified records. Number of iterations/splits
+        equals number of records with this cross-validation method per
+        definitionem.
+        """
         self.cval = LeaveOneOut()
         return self._eval_cross_validator()
 
     def defined(self, test_record_names):
+        """Run evaluation ith previously specified detectors on previously
+        specified records. Do not use cross-validation but do a predefined
+        split taking the given records as test records and all other records
+        as training records.
+
+        Args:
+            test_record_names (list of str): List of record names to use for
+                testing. All other records known to this evaluator are used for
+                training the detectors.
+        """
         test_fold = [
             0 if record.record_name in test_record_names else -1
             for record in self.records]
