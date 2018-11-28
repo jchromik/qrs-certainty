@@ -14,15 +14,13 @@ class GarciaBerdonesDetector(NNDetector):
 
     # Initialization
 
-    def __init__(self, batch_size, window_size, epochs=1, gpus=1):
+    def __init__(self, name, batch_size, window_size, epochs=1, gpus=1):
+        self.name = name
         self.batch_size = batch_size
         self.window_size = window_size
         self.epochs = epochs
         self.gpus = gpus
         self.model = self._build_model()
-
-    def __repr__(self):
-        return "Garcia-Berdones Detector"
 
     def __str__(self):
         return "\n".join([

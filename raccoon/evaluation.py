@@ -45,7 +45,7 @@ class Evaluation():
             tp, tn, fp, fn = metric
             report.append({
                 'ID': self.id,
-                'Detector': self.detector_name(),
+                'Detector': repr(self.detector),
                 'TP': tp, 'TN': tn, 'FP': fp, 'FN': fn,
                 'Train Records': [r.record_name for r in self.train_records],
                 'Test Record': test_record.record_name,
@@ -60,7 +60,7 @@ class Evaluation():
         for test_record, trigger in zip(self.test_records, self.detected_triggers):
             if len(trigger) == 0: continue
             filename = "{}_{}_{}".format(
-                self.id, self.detector_name(), test_record.record_name)
+                self.id, repr(self.detector), test_record.record_name)
             wfdb.wrann(
                 filename, "atr", np.array(trigger), ['N']*len(trigger),
                 write_dir=self.output_dir)
@@ -69,7 +69,7 @@ class Evaluation():
         self.detector.save_model("{}/{}_{}.h5".format(
             self.output_dir,
             self.id,
-            self.detector_name()))
+            repr(self.detector)))
 
     # PLOTTING
 
@@ -93,10 +93,6 @@ class Evaluation():
         if len(detected_trigger) > 0:
             plt.plot(detected_trigger, [1]*len(detected_trigger), 'ro')
         plt.savefig("{}/{}_{}_{}.{}".format(
-            self.output_dir, self.id, self.detector_name(), record_name, 'svg'))
+            self.output_dir, self.id, repr(self.detector), record_name, 'svg'))
         plt.close()
-
-    # CONVENIENCE
-
-    def detector_name(self):
-        return self.detector.__class__.__name__
+        

@@ -16,9 +16,10 @@ class XiangDetector(NNDetector):
     # Initialization
 
     def __init__(
-        self, batch_size, window_size, detection_size, aux_ratio,
+        self, name, batch_size, window_size, detection_size, aux_ratio,
         epochs=1, gpus=1
     ):
+        self.name = name
         self.batch_size = batch_size
         self.window_size = window_size
         self.detection_size = detection_size
@@ -26,9 +27,6 @@ class XiangDetector(NNDetector):
         self.epochs = epochs
         self.gpus = gpus
         self.model = self._build_model()
-
-    def __repr__(self):
-        return "Xiang Detector"
 
     def __str__(self):
         return "\n".join([

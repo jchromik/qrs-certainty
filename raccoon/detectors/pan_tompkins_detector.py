@@ -18,11 +18,9 @@ class PanTompkinsDetector(NonNNDetector):
 
     # Initialization
 
-    def __init__(self, window_size):
+    def __init__(self, name, window_size):
+        self.name = name
         self.window_size = window_size
-
-    def __repr__(self):
-        return "Pan-Tompkins Detector"
 
     def __str__(self):
         return "\n".join([

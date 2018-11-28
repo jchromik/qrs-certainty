@@ -12,6 +12,7 @@
     "detectors": [
         {
             "type": "GarciaBerdonesDetector",
+            "name": "Mr. Smalls",
             "batch_size": 32,
             "window_size": 10,
             "epochs": 3,

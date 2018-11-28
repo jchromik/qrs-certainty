@@ -7,11 +7,8 @@ from wfdb import processing
 
 class WfdbXQRSDetector(NonNNDetector):
 
-    def __repr__(self):
-        return "WFDB XQRS Detector"
-
-    def __str__(self):
-        return repr(self)
+    def __init__(self, name):
+        self.name = name
 
     # QRSDetector interface
 

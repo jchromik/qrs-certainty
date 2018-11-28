@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 
 class QRSDetector(ABC):
 
+    def __repr__(self):
+        return "{} ({})".format(self.name, self.__class__.__name__)
+
     @abstractmethod
     def train(self, records, triggers):
         """Use input as training data to train model."""
