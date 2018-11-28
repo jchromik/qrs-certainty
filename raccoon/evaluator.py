@@ -7,6 +7,7 @@ from tabulate import tabulate
 
 import csv
 import numpy as np
+import os
 import wfdb
 
 
@@ -21,7 +22,9 @@ class Evaluator():
         generate_plots=False,
         save_annotations=False,
         save_model=False,
-        actual_detected_distance = 5
+        trigger_distance = 5,
+        cv_method = "loocv",
+        test_records = []
     ):
         # instance variable set with constructor
         self.input_dir = input_dir
@@ -30,13 +33,19 @@ class Evaluator():
         self.save_annotations = save_annotations
         self.save_model = save_model
         self.generate_plots = generate_plots
-        self.actual_detected_distance = actual_detected_distance
+        self.trigger_distance = trigger_distance
+
         # instance variables set later on
         self.detectors = []
         self.records = []
         self.triggers = []
+
         # instance variables having default values
         self.plot_xlim = 10000
+        self.cval = None
+
+        # create output dir if not exists
+        if not os.path.exists(output_dir): os.makedirs(output_dir)
 
     def __repr__(self):
         return "Evaluator"
@@ -48,7 +57,7 @@ class Evaluator():
             "\tWriting to: {}".format(self.output_dir),
             "\tReading {} samples per signal.".format(self.sampto),
             "\tMaximum allowed distance between actual and detected trigger " +
-            "points: {} samples".format(self.actual_detected_distance),
+            "points: {} samples".format(self.trigger_distance),
             "\tScikit-learn Cross Validation Method: {}".format(self.cval)])
 
     # PRIVATE DATA ACCESSING HELPERS 
@@ -118,7 +127,7 @@ class Evaluator():
             self.output_dir, eval_id, detector,
             self._records(train), self._triggers(train),
             self._records(test), self._triggers(test),
-            self.actual_detected_distance)
+            self.trigger_distance)
         
         evaluation.run()
 
@@ -139,12 +148,12 @@ class Evaluator():
             + "\n\n\nRECORDS:\n\n"
             + ", ".join([record.record_name for record in self.records])
             + "\n")
-        with open("{}/header.txt".format(self.output_dir), 'w') as f:
+        with open("{}/header.txt".format(self.output_dir), 'w+') as f:
             f.write(header)
 
     def _save_reports(self, reports):
         keys = reports[0].keys()
-        with open("{}/report.csv".format(self.output_dir), 'w') as f:
+        with open("{}/report.csv".format(self.output_dir), 'w+') as f:
             dw = csv.DictWriter(f, keys)
             dw.writeheader()
             dw.writerows(reports)

@@ -18,8 +18,8 @@ class PanTompkinsDetector(NonNNDetector):
 
     # Initialization
 
-    def __init__(self, moving_window_size):
-        self.moving_window_size = moving_window_size
+    def __init__(self, window_size):
+        self.window_size = window_size
 
     def __repr__(self):
         return "Pan-Tompkins Detector"
@@ -27,7 +27,7 @@ class PanTompkinsDetector(NonNNDetector):
     def __str__(self):
         return "\n".join([
             repr(self),
-            "\tMoving Window Size: {}".format(self.moving_window_size),
+            "\tMoving Window Size: {}".format(self.window_size),
             "\tButterworth Bandpass Filter Lowcut: {}".format(LOWCUT),
             "\tButterworth Bandpass Filter Highcut: {}".format(HIGHCUT),
             "\tButterworth Bandpass Filter Order: {}".format(BUTTER_ORDER),
@@ -55,10 +55,10 @@ class PanTompkinsDetector(NonNNDetector):
         signal = self.__bandpass_filter(record.p_signal.T[0], record.fs)
         signal = np.ediff1d(signal)
         signal = signal ** 2
-        return np.convolve(signal, np.ones(self.moving_window_size), CONVOLVE_MODE)
+        return np.convolve(signal, np.ones(self.window_size), CONVOLVE_MODE)
 
     def __pt_indexes(self, pt_signal):
-        return pu.indexes(pt_signal, thres=IDX_THRESHOLD, min_dist=self.moving_window_size)
+        return pu.indexes(pt_signal, thres=IDX_THRESHOLD, min_dist=self.window_size)
 
     def __bandpass_filter(self, signal, fs):
         nyquist_freq = fs / 2

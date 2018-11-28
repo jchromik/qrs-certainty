@@ -1,0 +1,49 @@
+{
+    "input_dir": "../data/mitdb",
+    "output_dir": "../generated/example01",
+    "save_annotations": false,
+    "cv_method": "defined",
+    "test_records": ["100", "101"],
+    "trigger_distance": 5,
+    "save_model": false,
+    "generate_plots": false,
+    "records": ["100", "101", "102", "103", "104"],
+    "sampto": 10000,
+    "verbose": false,
+    "detectors": [
+        {
+            "type": "WfdbGQRSDetector"
+        },
+        {
+            "type": "WfdbXQRSDetector"
+        },
+        {
+            "type": "PanTompkinsDetector",
+            "window_size": 10
+        },
+        {
+            "type": "GarciaBerdonesDetector",
+            "batch_size": 32,
+            "window_size": 10,
+            "epochs": 3,
+            "gpus": 1
+        },
+        {
+            "type": "SarlijaDetector",
+            "batch_size": 32,
+            "window_size": 50,
+            "detection_size": 10,
+            "epochs": 3,
+            "gpus": 1
+        },
+        {
+            "type": "XiangDetector",
+            "batch_size": 32,
+            "window_size": 60,
+            "detection_size": 10,
+            "aux_ratio": 5,
+            "epochs": 3,
+            "gpu": 1
+        }
+    ]
+}
