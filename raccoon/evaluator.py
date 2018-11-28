@@ -1,4 +1,4 @@
-from annotationutils import trigger_points
+from utils.annotationutils import trigger_points
 from evaluation import Evaluation
 
 from itertools import product

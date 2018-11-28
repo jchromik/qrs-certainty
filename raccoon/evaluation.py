@@ -1,4 +1,4 @@
-from evaluationutils import trigger_metrics, sensitivity, ppv, f1
+from utils.evaluationutils import trigger_metrics, sensitivity, ppv, f1
 
 import matplotlib.pyplot as plt
 import numpy as np

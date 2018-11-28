@@ -3,7 +3,7 @@ sys.path.append("..")
 
 import unittest
 
-from evaluationutils import points_to_metrics
+from utils.evaluationutils import points_to_metrics
 
 class TestEvaluationUtils(unittest.TestCase):
 

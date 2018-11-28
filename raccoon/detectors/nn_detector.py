@@ -2,7 +2,7 @@ import sys
 sys.path.append("..")
 
 from detectors.qrs_detector import QRSDetector
-from triggerutils import signal_to_points
+from utils.triggerutils import signal_to_points
 
 from abc import abstractmethod
 
