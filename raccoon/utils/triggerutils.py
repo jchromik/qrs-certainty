@@ -3,9 +3,6 @@ import numpy as np
 
 # Utility
 
-def normalize(signal):
-    return (signal - np.min(signal)) / (np.max(signal) - np.min(signal))
-
 def discretize(signal, threshold=.5):
     return list(map(lambda x: 1. if x > threshold else 0., signal))
 
@@ -74,8 +71,7 @@ def signal_to_points(signal, threshold=.5, tolerance=3, with_certainty=False):
         List of trigger points. Also, list of certainties if with_certainty
         is True.
     """
-    normalized_signal = normalize(signal)
-    discretized_signal = discretize(normalized_signal, threshold)
+    discretized_signal = discretize(signal, threshold)
     sanitized_signal = remove_ripple(discretized_signal, tolerance)
 
     spikes = list(signal_to_spikes(sanitized_signal))
@@ -83,7 +79,7 @@ def signal_to_points(signal, threshold=.5, tolerance=3, with_certainty=False):
     points = spikes_to_points(spikes)
     if not with_certainty: return points
     
-    certainties = spikes_to_certainties(spikes, normalized_signal)
+    certainties = spikes_to_certainties(spikes, signal)
     return points, certainties
 
 # Synthesizing a trigger signal from trigger points
@@ -110,24 +106,24 @@ def points_to_signal(points, signal_length, window_size):
 # Certainty assessment
 
 def spikes_to_certainties(spikes, signal):
-    """Assess certainty of 1-spikes in a normalized trigger signal.
+    """Assess certainty of 1-spikes in a trigger signal.
 
     Args:
         spikes: List of 1-spikes in a trigger signal denoted as (begin, end).
-        signal: Normalized trigger signal.
+        signal: Trigger signal.
     Returns:
         List of certainties.
     """
     return [spike_certainty(spike, signal) for spike in spikes]
 
 def spike_certainty(spike, signal):
-    """Assess certainty of a single 1-spike in a normalizes trigger signal.
+    """Assess certainty of a single 1-spike in a trigger signal.
     This is done by computing the mean of all signal samples in the range
     defined by the spike.
 
     Args:
         spike: Single 1-spike denoted as (begin, end).
-        signal: Normalized trigger signal.
+        signal: Trigger signal.
     Returns:
         Certainty of the spike in the signal, i.e. mean of signal samples in
         spike range.
