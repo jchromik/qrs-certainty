@@ -77,17 +77,13 @@ class Evaluation():
     def save_annotations(self):
         for test_record, trigger in zip(self.test_records, self.detected_triggers):
             if len(trigger) == 0: continue
-            filename = "{}_{}_{}".format(
-                self.id, repr(self.detector), test_record.record_name)
             wfdb.wrann(
-                filename, "atr", np.array(trigger), ['N']*len(trigger),
-                write_dir=self.output_dir)
+                self._file_name_for(test_record), "atr", np.array(trigger),
+                ['N']*len(trigger), write_dir=self.output_dir)
 
     def save_model(self):
-        self.detector.save_model("{}/{}_{}.h5".format(
-            self.output_dir,
-            self.id,
-            repr(self.detector)))
+        self.detector.save_model("{}/{}.h5".format(
+            self.output_dir, self._file_name()))
 
     # PLOTTING
 
@@ -96,7 +92,7 @@ class Evaluation():
             self._plot_detection(xlim, idx)
 
     def _plot_detection(self, xlim, idx):
-        record_name = self.test_records[idx].record_name
+        record = self.test_records[idx]
         ecg_signal = self.test_records[idx].p_signal.T[0]
         trigger_signal = self.trigger_signals[idx]
         test_trigger = self.test_triggers[idx]
@@ -110,7 +106,15 @@ class Evaluation():
             plt.plot(test_trigger, [1]*len(test_trigger), 'go')
         if len(detected_trigger) > 0:
             plt.plot(detected_trigger, [1]*len(detected_trigger), 'ro')
-        plt.savefig("{}/{}_{}_{}.{}".format(
-            self.output_dir, self.id, repr(self.detector), record_name, 'svg'))
+        plt.savefig("{}/{}.svg".format(
+            self.output_dir, self._file_name_for(record)))
         plt.close()
-        
+
+    # HELPERS
+
+    def _file_name(self):
+        return "_".join([
+            str(self.id), self.detector.name, self.detector.__class__.__name__])
+
+    def _file_name_for(self, record):
+        return "_".join([self._file_name(), record.record_name])
