@@ -33,19 +33,15 @@ class PanTompkinsDetector(NonNNDetector):
 
     # QRSDetector interface
 
-    def trigger_signals(self, records):
-        return [self.__pt_signal(record) for record in records]
+    def trigger_signal(self, record):
+        return self.__pt_signal(record)
 
-    def detect(self, records):
-        return [
-            self.__pt_indexes(self.__pt_signal(record))
-            for record in records]
+    def trigger(self, record):
+        return self.__pt_indexes(self.__pt_signal(record))
 
-    def triggers_and_signals(self, records):
-        trigger_signals = self.trigger_signals(records)
-        return (
-            trigger_signals,
-            [self.__pt_indexes(ts) for ts in trigger_signals])
+    def trigger_and_signal(self, record):
+        trigger_signal = self.__pt_signal(record)
+        return trigger_signal, self.__pt_indexes(trigger_signal)
 
     # Private
 

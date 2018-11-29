@@ -15,11 +15,6 @@ class NNDetector(QRSDetector):
         """Build the detector-specific neural network (model)."""
         pass
 
-    @abstractmethod
-    def _trigger_signal(self, records):
-        """Use trained model to generate a trigger signal from an ECG recording."""
-        pass
-
     # Common implementations
 
     def reset(self):
@@ -30,18 +25,13 @@ class NNDetector(QRSDetector):
         """Save trained model with weights to file."""
         self.model.save(path)
 
-    def trigger_signals(self, records):
-        """Generate (multiple) trigger signals for (multiple) ECG recordings."""
-        return [self._trigger_signal(record) for record in records]
+    def trigger(self, record):
+        """Find trigger points in single ECG recording."""
+        return signal_to_points(self.trigger_signal(record))
 
-    def detect(self, records):
-        """Find trigger points in (multiple) ECG recordings."""
-        return [
-            signal_to_points(self._trigger_signal(record))
-            for record in records]
-
-    def triggers_and_signals(self, records):
-        trigger_signals = self.trigger_signals(records)
-        return (
-            trigger_signals,
-            [signal_to_points(ts) for ts in trigger_signals])
+    def trigger_and_signal(self, record):
+        """Return trigger signal and trigger points to avoid generating trigger
+        signal twice.
+        """
+        trigger_signal = self.trigger_signal(record)
+        return trigger_signal, signal_to_points(trigger_signal)

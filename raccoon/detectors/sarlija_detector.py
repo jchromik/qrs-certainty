@@ -64,9 +64,7 @@ class SarlijaDetector(NNDetector):
             shuffle=True, epochs=self.epochs,
             use_multiprocessing=True, workers=16, max_queue_size=16)
 
-    # NNDetector interface
-
-    def _trigger_signal(self, record):
+    def trigger_signal(self, record):
         ecg_signal = record.p_signal.T[0]
         predictions = self.model.predict_generator(
             generator = WindowGenerator(

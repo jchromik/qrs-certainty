@@ -12,16 +12,14 @@ class WfdbGQRSDetector(NonNNDetector):
 
     # QRSDetector interface
 
-    def trigger_signals(self, records):
+    def trigger_signal(self, record):
         """No trigger signals generated here."""
-        return [[] for record in records]
+        return []
 
-    def detect(self, records):
-        return [
-            processing.gqrs_detect(
-                sig = record.p_signal.T[0],
-                fs = record.fs)
-            for record in records]
+    def trigger(self, record):
+        return processing.gqrs_detect(
+            sig = record.p_signal.T[0],
+            fs = record.fs)
     
-    def triggers_and_signals(self, records):
-        return (self.trigger_signals(records), self.detect(records))
+    def trigger_and_signal(self, record):
+        return self.trigger_signal(record), self.trigger(record)
