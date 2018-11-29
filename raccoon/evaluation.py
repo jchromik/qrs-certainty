@@ -1,3 +1,4 @@
+from time import time
 from utils.evaluationutils import trigger_metrics, sensitivity, ppv, f1
 
 import matplotlib.pyplot as plt
@@ -11,7 +12,7 @@ class Evaluation():
         self, output_dir, evaluation_id, detector,
         train_records, train_triggers,
         test_records, test_triggers,
-        actual_detected_distance
+        trigger_distance
     ):
         self.output_dir = output_dir
         self.id = evaluation_id
@@ -27,21 +28,37 @@ class Evaluation():
         self.test_records = test_records
         self.test_triggers = test_triggers
 
-        self.actual_detected_distance = actual_detected_distance
+        self.trigger_distance = trigger_distance
 
     def run(self):
         self.detector.reset()
         self.detector.train(self.train_records, self.train_triggers)
-        self.trigger_signals, self.detected_triggers = (
-            self.detector.triggers_and_signals(self.test_records))
+        self._timed_detection()
         self.metrics = [
-            trigger_metrics(true, detected, self.actual_detected_distance)
+            trigger_metrics(true, detected, self.trigger_distance)
             for true, detected
             in zip(self.test_triggers, self.detected_triggers)]
 
+    def _timed_detection(self):
+        self.trigger_signals = []
+        self.detected_triggers = []
+        self.runtimes = []
+        for record in self.test_records:
+            self._timed_detection_for(record)
+
+    def _timed_detection_for(self, record):
+        start_time = time()
+        signal, trigger = self.detector.trigger_and_signal(record)
+        end_time = time()
+        runtime = end_time - start_time
+        self.trigger_signals.append(signal)
+        self.detected_triggers.append(trigger)
+        self.runtimes.append(runtime)
+
     def report(self):
         report = []
-        for test_record, metric in zip(self.test_records, self.metrics):
+        report_data = zip(self.test_records, self.metrics, self.runtimes)
+        for test_record, metric, runtime in report_data:
             tp, tn, fp, fn = metric
             report.append({
                 'ID': self.id,
@@ -51,7 +68,8 @@ class Evaluation():
                 'Test Record': test_record.record_name,
                 'Sensitivity': sensitivity(tp, fn),
                 'PPV': ppv(tp, fp),
-                'F1': f1(tp, fp, fn)})
+                'F1': f1(tp, fp, fn),
+                'Detection Runtime': runtime})
         return report
 
     # SAVING DATA TO FILES
