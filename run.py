@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+# Avoid threading issues with Tk, needs to be done before first importing wfdb,
+# since wfdb (somehow) uses matplotlib.
+import matplotlib
+matplotlib.use("agg")
+
 from argparse import ArgumentParser
 from os.path import dirname, isabs, join, realpath
 
