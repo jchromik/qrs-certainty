@@ -26,12 +26,17 @@ args = parser.parse_args()
 def absify(path, dir):
     return path if isabs(path) else realpath(join(dir, path))
 
+def all_signals_in(path):
+    return list(set([f.split('.')[0] for f in os.listdir(path)]))
+
 # Read configuration file
 
 with open(args.configuration_file, "r") as f:
     conf = json.load(f)
     conf["input_dir"] = absify(conf["input_dir"], dirname(f.name))
     conf["output_dir"] = absify(conf["output_dir"], dirname(f.name))
+    if not "records" in conf:
+        conf["records"] = all_signals_in(conf["input_dir"])
 
 if not conf["verbose"]:
     # disable Tensorflow logging
