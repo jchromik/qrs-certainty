@@ -30,16 +30,16 @@ def sensitivity(tp, fn):
     try:
         return tp / (tp+fn)
     except ZeroDivisionError:
-        return float('nan') if tp == 0 else float('inf')
+        return float('nan')
 
 def ppv(tp, fp):
     try:
         return tp / (tp+fp)
     except ZeroDivisionError:
-        return float('nan') if tp == 0 else float('inf')
+        return float('nan')
 
 def f1(tp, fp, fn):
     try:
         return (2*tp) / (2*tp + fp + fn)
     except ZeroDivisionError:
-        return float('nan') if tp == 0 else float('inf')
+        return float('nan')
