@@ -1,5 +1,4 @@
 import itertools
-import numpy as np
 
 # Utility
 
@@ -34,7 +33,7 @@ def signal_to_spikes(signal):
     Args:
         signal: Discretized signal. May only contain 0 and 1 elements.
     Returns:
-        List of (begin, end) tuples with begin being the begin index of a
+        Iterable of (begin, end) tuples with begin being the begin index of a
         1-spike and end being the end index of a 1-spike.
     """
     ds = differentiate(itertools.chain(iter([0.0]), signal, iter([0.0])))
@@ -53,7 +52,7 @@ def spikes_to_points(spikes):
     """
     points = []
     for begin, end in spikes:
-        points.append(int((begin + end) / 2))
+        points.append((begin + end) // 2)
     return points
 
 def signal_to_points(signal, threshold=.5, tolerance=3, with_certainty=False):
@@ -96,11 +95,11 @@ def points_to_signal(points, signal_length, window_size):
         trigger points. All signal samples are either 0 or 1 and there is no
         ripple.
     """
-    signal = np.zeros(signal_length)
+    signal = [0.]*signal_length
     for point in points:
-        start = point - window_size // 2
-        end = point + window_size // 2
-        signal[start:end] = 1.
+        start = max(point - window_size // 2, 0)
+        end = min(start + window_size, signal_length)
+        signal[start:end] = [1.]*(end-start)
     return signal
 
 # Certainty assessment
@@ -129,4 +128,4 @@ def spike_certainty(spike, signal):
         spike range.
     """
     begin, end = spike
-    return np.mean(signal[begin:end])
+    return sum(signal[begin:end]) / (end-begin)
