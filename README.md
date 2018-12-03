@@ -28,11 +28,17 @@ We provide a Python script for doing this. Call `download_databases.py` and spec
 We support:
  * MIT-BIH Arrhythmia Database (`mitdb`)
  * MIT-BIH Normal Sinus Rhythm Database (`nsrdb`)
- * MIT-BIH Noise Stress Test Database (`nstdb`) (for now just the noise signals)
+ * MIT-BIH Noise Stress Test Database (`nstdb`)
 
 For example, for downloading the `mitdb` to a directory called `data`:
 ```shell
 ./download_databases.py -d data -k mitdb
+```
+
+For more noise contaminated data use `noisy_mitdb.py`. This script uses [`nst`](https://www.physionet.org/physiotools/wag/nst-1.htm) from the [WFDB software package](https://www.physionet.org/physiotools/wag/) to create noisy records from all `mitdb` records using the electrode motion `em` noise template from `nstdb`.
+
+```shell
+./noisy_mitdb.py # writes records to current working directory 
 ```
 
 ### Run Evaluation
