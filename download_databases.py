@@ -59,11 +59,11 @@ args = parser.parse_args()
 for key in args.db_keys:
     if key not in databases: continue
     db = databases[key]
-    db_dir = f"{args.dir}/{key}"
+    db_dir = "/".join([args.dir, key])
     if not os.path.exists(db_dir): os.makedirs(db_dir)
 
     for f, s in itertools.product(db["files"], db["suffixes"]):
-        remote = f"{db["remote"]}/{f}.{s}"
-        local = f"{db_dir}/{f}.{s}"
-        print(f"{remote} --> {local}")
+        remote = "{}/{}.{}".format(db["remote"], f, s)
+        local = "{}/{}.{}".format(db_dir, f, s)
+        print(" --> ".join([remote, local]))
         urlretrieve(remote, local)

@@ -70,11 +70,12 @@ class Evaluator():
     def __str__(self):
         return "\n".join([
             repr(self),
-            f"\tReading from: {self.input_dir}",
-            f"\tWriting to: {self.output_dir}",
-            f"\tReading {self.sampto} samples per signal.",
-            f"\tTrigger Distance: {self.trigger_distance} samples",
-            f"\tScikit-learn Cross Validation Method: {self.cval}"])
+            "\tReading from: {}".format(self.input_dir),
+            "\tWriting to: {}".format(self.output_dir),
+            "\tReading {} samples per signal.".format(self.sampto),
+            "\tMaximum allowed distance between actual and detected trigger " +
+            "points: {} samples".format(self.trigger_distance),
+            "\tScikit-learn Cross Validation Method: {}".format(self.cval)])
 
     # PRIVATE DATA ACCESSING HELPERS 
 
@@ -185,12 +186,12 @@ class Evaluator():
             + "\n\n\nRECORDS:\n\n"
             + ", ".join([record.record_name for record in self.records])
             + "\n")
-        with open(f"{self.output_dir}/header.txt", 'w+') as f:
+        with open("{}/header.txt".format(self.output_dir), 'w+') as f:
             f.write(header)
 
     def _save_reports(self, reports):
         keys = reports[0].keys()
-        with open(f"{self.output_dir}/report.csv", 'w+') as f:
+        with open("{}/report.csv".format(self.output_dir), 'w+') as f:
             dw = csv.DictWriter(f, keys)
             dw.writeheader()
             dw.writerows(reports)

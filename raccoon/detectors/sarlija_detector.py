@@ -29,11 +29,11 @@ class SarlijaDetector(NNDetector):
     def __str__(self):
         return "\n".join([
             repr(self),
-            f"\tBatch Size: {self.batch_size}",
-            f"\tWindow Size: {self.window_size}",
-            f"\tDetection Size: {self.detection_size}",
-            f"\tTraining Epochs: {self.epochs}",
-            f"\tNumber of GPUs used: {self.gpus}"])
+            "\tBatch Size: {}".format(self.batch_size),
+            "\tWindow Size: {}".format(self.window_size),
+            "\tDetection Size: {}".format(self.detection_size),
+            "\tTraining Epochs: {}".format(self.epochs),
+            "\tNumber of GPUs used: {}".format(self.gpus)])
 
     def _build_model(self):
         model = Sequential()

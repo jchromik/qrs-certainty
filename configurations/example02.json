@@ -4,7 +4,7 @@
     "save_annotations": false,
     "cv_method": "loocv",
     "trigger_distance": 5,
-    "save_model": true,
+    "save_model": false,
     "plot_limit": 1000,
     "records": ["100", "101", "102", "103", "104"],
     "sampto": 10000,

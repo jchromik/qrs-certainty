@@ -19,7 +19,7 @@ records = [
 for record, snr in product(records, snrs):
     run([
         "nst",
-        "-i", f"{database}/{record}", noise,
-        "-o", f"{record}e{snr}",
+        "-i", "/".join([database, record]), noise,
+        "-o", "{}e{}".format(record, snr),
         "-s", str(snr),
         "-F", "212"])
