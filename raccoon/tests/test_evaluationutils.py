@@ -35,7 +35,3 @@ class TestEvaluationUtils(unittest.TestCase):
     def test_f1(self):
         self.assertEqual(eu.f1(3, 7, 7), 0.3)
         self.assertTrue(math.isnan(eu.f1(0, 0, 0)))
-
-
-if __name__ == '__main__':
-    unittest.main()
