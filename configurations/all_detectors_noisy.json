@@ -1,7 +1,7 @@
 {
     "input_dir": "../data/noisy_mitdb",
     "output_dir": "../generated/all_detectors_noisy",
-    "sampto": 10000
+    "sampto": 10000,
     "save_annotations": false,
     "cv_method": "k2",
     "trigger_distance": 5,
