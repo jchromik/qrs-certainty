@@ -44,6 +44,23 @@ Example call:
 ./run.py configurations/example01.json
 ```
 
+### Run in a Docker Container
+
+The Dockerfile is made for building Docker images to run on GPU machines. Hence, `nvidia-docker` is required to build images.
+In the root directory of this repository run:
+
+```shell
+nvidia-docker build -t raccoon:latest .
+```
+
+To start a container running this image:
+
+```shell
+nvidia-docker run -it raccoon bash
+```
+
+From there you can call `run.py` as described above.
+
 ## Which detectors do we compare?
 
 We use three NN-based detectors and three signal processing based detectors.
