@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from time import time
 from utils.evaluationutils import trigger_metrics, sensitivity, ppv, f1
 
@@ -60,16 +61,16 @@ class Evaluation():
         report_data = zip(self.test_records, self.metrics, self.runtimes)
         for test_record, metric, runtime in report_data:
             tp, tn, fp, fn = metric
-            report.append({
-                'ID': self.id,
-                'Detector': repr(self.detector),
-                'TP': tp, 'TN': tn, 'FP': fp, 'FN': fn,
-                'Train Records': [r.record_name for r in self.train_records],
-                'Test Record': test_record.record_name,
-                'Sensitivity': sensitivity(tp, fn),
-                'PPV': ppv(tp, fp),
-                'F1': f1(tp, fp, fn),
-                'Detection Runtime': runtime})
+            report.append(OrderedDict([
+                ('ID', self.id),
+                ('Detector', repr(self.detector)),
+                ('Train Records', [r.record_name for r in self.train_records]),
+                ('Test Record', test_record.record_name),
+                ('TP', tp), ('TN', tn), ('FP', fp), ('FN', fn),
+                ('Sensitivity', sensitivity(tp, fn)),
+                ('PPV', ppv(tp, fp)),
+                ('F1', f1(tp, fp, fn)),
+                ('Detection Runtime', runtime)]))
         return report
 
     # SAVING DATA TO FILES
