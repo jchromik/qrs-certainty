@@ -3,7 +3,7 @@ import itertools
 # Utility
 
 def discretize(signal, threshold=.5):
-    return list(map(lambda x: 1. if x > threshold else 0., signal))
+    return list(map(lambda x: 1. if x >= threshold else 0., signal))
 
 def differentiate(signal):
     s1, s2 = itertools.tee(signal)
@@ -21,6 +21,7 @@ def remove_ripple(signal, tolerance):
     Returns:
         Signal without ripple.
     """
+    tolerance += 1
     for idx in range(len(signal)):
         yield signal[idx]
         if idx+tolerance >= len(signal): continue
