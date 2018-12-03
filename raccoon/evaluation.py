@@ -83,8 +83,7 @@ class Evaluation():
                 ['N']*len(trigger), write_dir=self.output_dir)
 
     def save_model(self):
-        self.detector.save_model("{}/{}.h5".format(
-            self.output_dir, self._file_name()))
+        self.detector.save_model(f"{self.output_dir}/{self._file_name()}.h5")
 
     # PLOTTING
 
@@ -107,8 +106,7 @@ class Evaluation():
             plt.plot(test_trigger, [1]*len(test_trigger), 'go')
         if len(detected_trigger) > 0:
             plt.plot(detected_trigger, [1]*len(detected_trigger), 'ro')
-        plt.savefig("{}/{}.svg".format(
-            self.output_dir, self._file_name_for(record)))
+        plt.savefig(f"{self.output_dir}/{self._file_name_for(record)}.svg")
         plt.close()
 
     # HELPERS

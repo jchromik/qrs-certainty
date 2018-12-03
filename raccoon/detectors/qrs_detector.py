@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 class QRSDetector(ABC):
 
     def __repr__(self):
-        return "{} ({})".format(self.name, self.__class__.__name__)
+        return f"{self.name} ({self.__class__.__name__})"
 
     def trigger_signals(self, records):
         """Generate (multiple) trigger signals for multiple ECG recordings."""
