@@ -62,8 +62,7 @@ class NameBuilder():
         self.already_in_use = []
 
     def name(self):
-        adjective, animal = choice(ADJECTIVES), choice(ANIMALS)
-        name = f"{adjective}_{animal}"
+        name = "_".join([choice(ADJECTIVES), choice(ANIMALS)])
         if name not in self.already_in_use:
             self.already_in_use.append(name)
             return name
