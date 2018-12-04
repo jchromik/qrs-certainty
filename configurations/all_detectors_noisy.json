@@ -1,7 +1,6 @@
 {
     "input_dir": "../data/noisy_mitdb",
     "output_dir": "../generated/all_detectors_noisy",
-    "sampto": 10000,
     "save_annotations": false,
     "cv_method": "k2",
     "trigger_distance": 5,
@@ -22,14 +21,14 @@
             "type": "GarciaBerdonesDetector",
             "batch_size": 32,
             "window_size": 10,
-            "epochs": 3
+            "epochs": 1
         },
         {
             "type": "SarlijaDetector",
             "batch_size": 32,
             "window_size": 50,
             "detection_size": 10,
-            "epochs": 3
+            "epochs": 1
         },
         {
             "type": "XiangDetector",
@@ -37,7 +36,7 @@
             "window_size": 60,
             "detection_size": 10,
             "aux_ratio": 5,
-            "epochs": 3
+            "epochs": 1
         }
     ]
 }
