@@ -47,7 +47,7 @@ if not conf["verbose"]:
 # Build Evaluator
 
 sys.path.append(join(dirname(__file__), "./raccoon"))
-from utils.builders import evaluator_from_dict
+from raccoon.utils.builders import evaluator_from_dict
 
 evaluator = evaluator_from_dict(conf)
 cv_method = conf["cv_method"]
