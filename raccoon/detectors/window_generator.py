@@ -1,4 +1,4 @@
-from utils.triggerutils import points_to_signal
+from ..utils.triggerutils import points_to_signal
 
 from itertools import chain
 from keras.utils import Sequence

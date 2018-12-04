@@ -1,8 +1,5 @@
-import sys
-sys.path.append("..")
-
-from detectors.qrs_detector import QRSDetector
-from utils.triggerutils import signal_to_points
+from . import QRSDetector
+from ..utils.triggerutils import signal_to_points
 
 from abc import abstractmethod
 

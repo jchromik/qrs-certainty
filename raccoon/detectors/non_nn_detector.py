@@ -1,7 +1,4 @@
-import sys
-sys.path.append("..")
-
-from detectors.qrs_detector import QRSDetector
+from . import QRSDetector
 
 class NonNNDetector(QRSDetector):
 

@@ -1,5 +1,5 @@
-from utils.annotationutils import trigger_points
-from evaluation import Evaluation
+from .utils.annotationutils import trigger_points
+from .evaluation import Evaluation
 
 from itertools import product
 from sklearn.model_selection import KFold, LeaveOneOut, PredefinedSplit

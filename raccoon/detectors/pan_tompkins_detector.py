@@ -1,7 +1,4 @@
-import sys
-sys.path.append("..")
-
-from detectors.non_nn_detector import NonNNDetector
+from . import NonNNDetector
 
 from scipy.signal import butter, lfilter
 

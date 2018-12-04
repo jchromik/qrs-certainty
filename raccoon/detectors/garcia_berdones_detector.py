@@ -1,8 +1,5 @@
-import sys
-sys.path.append("..")
-
-from detectors.nn_detector import NNDetector
-from detectors.window_generator import WindowGenerator
+from . import NNDetector
+from . import WindowGenerator
 
 from keras.layers import Dense
 from keras.models import Sequential

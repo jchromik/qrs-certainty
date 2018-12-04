@@ -1,8 +1,6 @@
-import sys
-sys.path.append("..")
+from ..detectors import *
+from ..evaluator import Evaluator
 
-from detectors import *
-from evaluator import Evaluator
 from inspect import signature, Parameter
 from random import choice
 from tensorflow.python.client.device_lib import list_local_devices as lsdev
