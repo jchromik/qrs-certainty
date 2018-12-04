@@ -3,7 +3,7 @@ sys.path.append("..")
 
 from detectors import *
 from evaluator import Evaluator
-from inspect import signature
+from inspect import signature, Parameter
 from random import choice
 from tensorflow.python.client.device_lib import list_local_devices as lsdev
 
@@ -69,27 +69,37 @@ class NameBuilder():
         else:
             return self.name()
 
+class InsufficientConfiguration(Exception):
+    pass
 
 def evaluator_from_dict(conf):
     if not "input_dir" in conf:
-        raise KeyError("No input directory specified in configuration.")
+        raise InsufficientConfiguration(
+            "No input directory specified in configuration.")
         
     if not "output_dir" in conf:
-        raise KeyError("No output directory specified in configuration.")
+        raise InsufficientConfiguration(
+            "No output directory specified in configuration.")
 
     name_builder = NameBuilder()
 
     evaluator = __call_constructor(Evaluator, conf)
-    evaluator.add_detectors(*[
-        detector_from_dict(detector_conf, name_builder)
-        for detector_conf in conf["detectors"]])
-    evaluator.add_records(*(conf["records"]))
+    
+    if "detectors" in conf: 
+        evaluator.add_detectors(*[
+            detector_from_dict(detector_conf, name_builder)
+            for detector_conf in conf["detectors"]])
+    else: raise InsufficientConfiguration("No detectors specified.")
+
+    if "records" in conf: evaluator.add_records(*(conf["records"]))
+    else: raise InsufficientConfiguration("No records specified.")
 
     return evaluator
 
 def detector_from_dict(conf, name_builder):
     if not "type" in conf:
-        raise KeyError("No detector type specified in configuration.")
+        raise InsufficientConfiguration(
+            "No detector type specified in configuration.")
 
     detector_class = eval(conf["type"])
     if not "name" in conf:
@@ -99,6 +109,11 @@ def detector_from_dict(conf, name_builder):
     return __call_constructor(detector_class, conf)
 
 def __call_constructor(klass, conf):
-    constructor_keys = signature(klass.__init__).parameters.keys()
-    kwargs = {key: conf[key] for key in constructor_keys if key in conf}
+    ctor_params = signature(klass).parameters
+    kwargs = {}
+    for key, param in ctor_params.items():
+        if key in conf: kwargs[key] = conf[key]
+        elif param.default == Parameter.empty:
+            raise InsufficientConfiguration(
+                "{} missing in detector configuration".format(key))
     return klass(**kwargs)
