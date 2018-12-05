@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/jchromik/raccoon.svg?branch=master)](https://travis-ci.org/jchromik/raccoon?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/jchromik/raccoon/badge.svg?branch=master)](https://coveralls.io/github/jchromik/raccoon?branch=master)
+
 # Project Raccoon
 
 This is part of my master's thesis. I evaluate how neural networks perform on the task of finding QRS complexes in single-channel ECG signals of varying signal quality. The name (raccoon) has no further meaning, I just like raccoons and needed a name. Think of a zealous raccoon searching for QRS complexes!
