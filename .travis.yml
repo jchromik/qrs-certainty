@@ -5,6 +5,6 @@ python:
 install:
  - pip install -r requirements.txt
 script:
- - coverage run --branch --source=raccoon -m unittest discover raccoon/tests
+ - python -m unittest discover raccoon/tests
 after_success:
- - coveralls
+ - coverage run --branch --source=raccoon -m unittest discover raccoon/tests; coveralls
