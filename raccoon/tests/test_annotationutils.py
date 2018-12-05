@@ -1,6 +1,3 @@
-import sys
-sys.path.append("..")
-
 import unittest
 from collections import namedtuple
 from raccoon.utils import annotationutils as au

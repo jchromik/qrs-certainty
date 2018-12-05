@@ -1,6 +1,3 @@
-import sys
-sys.path.append("..")
-
 import unittest
 
 from raccoon.utils import triggerutils as tu

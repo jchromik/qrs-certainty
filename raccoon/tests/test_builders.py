@@ -2,9 +2,6 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-import sys
-sys.path.append("..")
-
 import unittest
 from raccoon.detectors import GarciaBerdonesDetector, WfdbXQRSDetector
 from raccoon.utils import builders
