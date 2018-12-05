@@ -77,34 +77,34 @@ class TestEvaluatorFactoryMethod(unittest.TestCase):
 
     def test_input_dir_missing(self):
         with self.assertRaises(builders.InsufficientConfiguration):
-            builders.evaluator_from_dict({"output_dir": "something"})
+            builders.evaluator_from_dict({"output_dir": "generated"})
 
     def test_output_dir_missing(self):
         with self.assertRaises(builders.InsufficientConfiguration):
-            builders.evaluator_from_dict({"input_dir": "something"})
+            builders.evaluator_from_dict({"input_dir": "data"})
 
     def test_detectors_missing(self):
         with self.assertRaises(builders.InsufficientConfiguration):
             builders.evaluator_from_dict({
-                "input_dir": "something", 
-                "output_dir": "something",
+                "input_dir": "data", 
+                "output_dir": "generated",
                 "records": []})
     
     def test_records_missing(self):
         with self.assertRaises(builders.InsufficientConfiguration):
             builders.evaluator_from_dict({
-                "input_dir": "something", 
-                "output_dir": "something",
+                "input_dir": "data", 
+                "output_dir": "generated",
                 "detectors": [{"type": "WfdbXQRSDetector"}]})
 
     def test_basic_configuration(self):
         evaluator = builders.evaluator_from_dict({
-                "input_dir": "something", 
-                "output_dir": "something",
+                "input_dir": "data", 
+                "output_dir": "generated",
                 "detectors": [{"type": "WfdbXQRSDetector"}],
                 "records": []})
         
-        self.assertEqual(evaluator.input_dir, "something")
-        self.assertEqual(evaluator.output_dir, "something")
+        self.assertEqual(evaluator.input_dir, "data")
+        self.assertEqual(evaluator.output_dir, "generated")
         self.assertEqual(evaluator.detectors[0].__class__, WfdbXQRSDetector)
         self.assertEqual(len(evaluator.records), 0)

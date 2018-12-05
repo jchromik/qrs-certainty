@@ -1,10 +1,11 @@
 language: python
 python:
- - "3.5"
- - "3.6"
+  - "3.5"
+  - "3.6"
 install:
- - pip install -r requirements.txt
+  - pip install -r requirements.txt
 script:
- - coverage run --branch --source=raccoon -m unittest discover raccoon/tests
+  - coverage run -m unittest discover raccoon/tests
 after_success:
- - coveralls
+  - coverage report
+  - coveralls

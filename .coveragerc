@@ -1,0 +1,4 @@
+[run]
+branch = True
+source = raccoon
+omit = raccoon/tests/*
