@@ -2,6 +2,7 @@ from raccoon.detectors.qrs_detector import QRSDetector
 from raccoon.detectors.nn_detector import NNDetector
 from raccoon.detectors.non_nn_detector import NonNNDetector
 from raccoon.detectors.window_generator import WindowGenerator
+from raccoon.detectors.window_generators import SingleSignalWindowGenerator
 
 from raccoon.detectors.garcia_berdones_detector import GarciaBerdonesDetector
 from raccoon.detectors.pan_tompkins_detector import PanTompkinsDetector
