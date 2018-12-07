@@ -1,6 +1,9 @@
 from ..utils.triggerutils import points_to_signal
+from keras.utils import Sequence
 
-class SingleSignalWindowGenerator():
+import numpy as np
+
+class SingleSignalWindowGenerator(Sequence):
 
     def __init__(
         self, signal_chunks, batch_size, window_size,
@@ -58,6 +61,8 @@ class SingleSignalWindowGenerator():
         self.__check_chunk_index(chunk_index)
         chunk = self.signal_chunks[chunk_index]
         self.__check_window_index(chunk, window_index)
+        if not self.trigger_signals:
+            raise RuntimeError("Generator has no labels.")
 
         trigger_signal = self.trigger_signals[chunk_index]
         return trigger_signal[window_index + self.window_size // 2]
@@ -73,12 +78,16 @@ class SingleSignalWindowGenerator():
     def label_batch(self, batch_index):
         return self._labels(self._index_pairs_for_batch(batch_index))
 
-    def batch(self, batch_index):
+    def train_batch(self, batch_index):
         index_pairs = self._index_pairs_for_batch(batch_index)
         return self._windows(index_pairs), self._labels(index_pairs)
 
     def __getitem__(self, index):
-        return self.batch(index)
+        if not self.trigger_signals:
+            return np.array(self.window_batch(index))
+
+        windows, labels = self.train_batch(index)
+        return np.array(windows), np.array(labels)
 
     def __len__(self):
         num_windows = sum([

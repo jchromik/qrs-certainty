@@ -1,5 +1,5 @@
 from . import NNDetector
-from . import WindowGenerator
+from . import SingleSignalWindowGenerator
 
 from keras.layers import Dense
 from keras.models import Sequential
@@ -44,7 +44,7 @@ class GarciaBerdonesDetector(NNDetector):
     def train(self, records, triggers):
         ecg_signals = [record.p_signal.T[0] for record in records]
         self.history = self.model.fit_generator(
-            generator = WindowGenerator(
+            generator = SingleSignalWindowGenerator(
                 ecg_signals, self.batch_size, self.window_size, triggers),
             shuffle=True, epochs=self.epochs,
             use_multiprocessing=True, workers=16, max_queue_size=16)
@@ -52,7 +52,7 @@ class GarciaBerdonesDetector(NNDetector):
     def trigger_signal(self, record):
         ecg_signal = record.p_signal.T[0]
         predictions = self.model.predict_generator(
-            generator = WindowGenerator(
+            generator = SingleSignalWindowGenerator(
                 [ecg_signal], self.batch_size, self.window_size),
             use_multiprocessing=True, workers=16, max_queue_size=16)
         return np.append(
