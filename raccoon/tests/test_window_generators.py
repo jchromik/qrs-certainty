@@ -17,7 +17,7 @@ class TestSingleSignalWindowGenerator(unittest.TestCase):
             trigger_chunks = TRIGGER_CHUNKS, detection_size = 3)
 
     def test_index_pair(self):
-        self.assertTupleEqual(self.gen.__index_pair(0), (0,0))
+        self.assertTupleEqual(self.gen._index_pair(0), (0,0))
     
     def test_index_pairs_for_batch(self):
         pass
