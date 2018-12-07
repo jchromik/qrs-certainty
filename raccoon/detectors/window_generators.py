@@ -7,13 +7,14 @@ class SingleSignalWindowGenerator(Sequence):
 
     def __init__(
         self, signal_chunks, batch_size, window_size,
-        trigger_chunks=[], detection_size=None
+        trigger_chunks=[], detection_size=None, wrap_samples=False
     ):
         detection_size = detection_size if detection_size else window_size
 
         self.signal_chunks = signal_chunks
         self.batch_size = batch_size
         self.window_size = window_size
+        self.wrap_samples = wrap_samples
         self.trigger_signals = [
             points_to_signal(trigger, len(chunk), detection_size)
             for trigger, chunk in zip(trigger_chunks, signal_chunks)]
@@ -84,10 +85,16 @@ class SingleSignalWindowGenerator(Sequence):
 
     def __getitem__(self, index):
         if not self.trigger_signals:
-            return np.array(self.window_batch(index))
+            windows = np.array(self.window_batch(index))
+            if self.wrap_samples:
+                windows.shape = (self.batch_size, self.window_size, 1)
+            return windows
 
         windows, labels = self.train_batch(index)
-        return np.array(windows), np.array(labels)
+        windows, labels = np.array(windows), np.array(labels)
+        if self.wrap_samples:
+            windows.shape = (self.batch_size, self.window_size, 1)
+        return windows, labels
 
     def __len__(self):
         num_windows = sum([
