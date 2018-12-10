@@ -1,4 +1,5 @@
-from raccoon.detectors import SingleSignalWindowGenerator, SignalWindowGenerator
+from raccoon.detectors import (
+    SingleSignalWindowGenerator, SignalWindowGenerator, LabelGenerator)
 
 import numpy as np
 import unittest
@@ -80,9 +81,76 @@ class TestSignalWindowGenerator(unittest.TestCase):
         with self.assertRaises(IndexError):
             self.swg.windows([(1, 8), (2, 0), (2, 8)])
 
+    def test_batch(self):
+        self.assertListEqual(
+            self.swg.batch(0),
+            [ [0.9, 0.4, 0.1, 0.2], [0.4, 0.1, 0.2, 0.6] ])
+        self.assertListEqual(
+            self.swg.batch(1),
+            [ [0.1, 0.2, 0.6, 0.0], [0.2, 0.6, 0.0, 0.3] ])
+        self.assertListEqual(
+            self.swg.batch(3),
+            [ [0.3, 0.5, 0.0, 0.4], [0.5, 0.0, 0.2, 0.5] ])
+        self.assertListEqual(
+            self.swg.batch(11),
+            [ [0.5, 0.7, 0.9, 0.1], [0.7, 0.9, 0.1, 0.3] ])
+        with self.assertRaises(IndexError):
+            self.swg.batch(12)
+
+class TestLabelGenerator(unittest.TestCase):
+
+    def setUp(self):
+        self.lg = LabelGenerator(
+            TRIGGER_CHUNKS, [len(chunk) for chunk in SIGNAL_CHUNKS],
+            batch_size = 2, window_size = 4, detection_size = 1)
+
+    def test_label(self):
+        self.assertEqual(self.lg.label(0, 0), 1)
+        self.assertEqual(self.lg.label(0, 1), 1)
+        self.assertEqual(self.lg.label(0, 2), 0)
+        self.assertEqual(self.lg.label(0, 3), 0)
+        self.assertEqual(self.lg.label(0, 4), 0)
+        self.assertEqual(self.lg.label(0, 5), 1)
+        self.assertEqual(self.lg.label(0, 6), 0)
+        self.assertEqual(self.lg.label(1, 0), 1)
+        self.assertEqual(self.lg.label(1, 1), 0)
+        with self.assertRaises(IndexError): self.lg.label(2, 8)
+        with self.assertRaises(IndexError): self.lg.label(0, 7)
+        with self.assertRaises(IndexError): self.lg.label(1, -1)
+        with self.assertRaises(IndexError): self.lg.label(3, 0)
+        with self.assertRaises(IndexError): self.lg.label(-1, 0)
+
+    def test_labels(self):
+        self.assertListEqual(
+            self.lg.labels([(0, 0), (0, 1), (0, 6), (1, 0)]),
+            [1, 1, 0, 1])
+        self.assertListEqual(
+            self.lg.labels([(1, 8), (2, 0), (2, 7)]),
+            [0, 0, 1])
+        with self.assertRaises(IndexError):
+            self.lg.labels([(1, 8), (2, 0), (3, 0)])
+
+    def test_getitem(self):
+        self.assertListEqual(self.lg[0], [1, 1])
+        self.assertListEqual(self.lg[1], [0, 0])
+        self.assertListEqual(self.lg[3], [0, 1])
+        self.assertListEqual(self.lg[11], [0, 1])
+        with self.assertRaises(IndexError):
+            self.lg[12]
+
 class TestSingleSignalWindowGenerator(unittest.TestCase):
 
     def setUp(self):
+        self.swg = SignalWindowGenerator(
+            SIGNAL_CHUNKS, batch_size = 2, window_size = 4)
+
+        self.swg_wrap = SignalWindowGenerator(
+            SIGNAL_CHUNKS, batch_size = 2, window_size = 4, wrap_samples = True)
+
+        self.lg = LabelGenerator(
+            TRIGGER_CHUNKS, [len(chunk) for chunk in SIGNAL_CHUNKS],
+            batch_size = 2, window_size = 4, detection_size = 1)
+
         self.train_gen = SingleSignalWindowGenerator(
             SIGNAL_CHUNKS, batch_size = 2, window_size = 4,
             trigger_chunks = TRIGGER_CHUNKS, detection_size = 1)
@@ -99,73 +167,10 @@ class TestSingleSignalWindowGenerator(unittest.TestCase):
             SIGNAL_CHUNKS, batch_size = 2, window_size = 4,
             wrap_samples = True)
 
-    def test_label(self):
-        self.assertEqual(self.train_gen._label(0, 0), 1)
-        self.assertEqual(self.train_gen._label(0, 1), 1)
-        self.assertEqual(self.train_gen._label(0, 2), 0)
-        self.assertEqual(self.train_gen._label(0, 3), 0)
-        self.assertEqual(self.train_gen._label(0, 4), 0)
-        self.assertEqual(self.train_gen._label(0, 5), 1)
-        self.assertEqual(self.train_gen._label(0, 6), 0)
-        self.assertEqual(self.train_gen._label(1, 0), 1)
-        self.assertEqual(self.train_gen._label(1, 1), 0)
-        with self.assertRaises(IndexError): self.train_gen._label(2, 8)
-        with self.assertRaises(IndexError): self.train_gen._label(0, 7)
-        with self.assertRaises(IndexError): self.train_gen._label(3, 0)
-        with self.assertRaises(IndexError): self.train_gen._label(1, -1)
-        with self.assertRaises(RuntimeError): self.test_gen._label(1, 1)
-
-    def test_labels(self):
-        self.assertListEqual(
-            self.train_gen._labels([(0, 0), (0, 1), (0, 6), (1, 0)]),
-            [1, 1, 0, 1])
-        self.assertListEqual(
-            self.train_gen._labels([(1, 8), (2, 0), (2, 7)]),
-            [0, 0, 1])
-        with self.assertRaises(IndexError):
-            self.train_gen._labels([(1, 8), (2, 0), (2, 8)])
-        with self.assertRaises(RuntimeError):
-            self.test_gen._labels([(1, 8), (2, 0), (2, 7)])
-
-    def test_window_batch(self):
-        self.assertListEqual(
-            self.train_gen.window_batch(0),
-            [ [0.9, 0.4, 0.1, 0.2], [0.4, 0.1, 0.2, 0.6] ])
-        self.assertListEqual(
-            self.train_gen.window_batch(1),
-            [ [0.1, 0.2, 0.6, 0.0], [0.2, 0.6, 0.0, 0.3] ])
-        self.assertListEqual(
-            self.train_gen.window_batch(3),
-            [ [0.3, 0.5, 0.0, 0.4], [0.5, 0.0, 0.2, 0.5] ])
-        self.assertListEqual(
-            self.train_gen.window_batch(11),
-            [ [0.5, 0.7, 0.9, 0.1], [0.7, 0.9, 0.1, 0.3] ])
-        with self.assertRaises(IndexError):
-            self.train_gen.window_batch(12)
-
-    def test_label_batch(self):
-        self.assertListEqual(self.train_gen.label_batch(0), [1, 1])
-        self.assertListEqual(self.train_gen.label_batch(1), [0, 0])
-        self.assertListEqual(self.train_gen.label_batch(3), [0, 1])
-        self.assertListEqual(self.train_gen.label_batch(11), [0, 1])
-        with self.assertRaises(IndexError):
-            self.train_gen.label_batch(12)
-        with self.assertRaises(RuntimeError):
-            self.test_gen.label_batch(11)
-
-    def test_train_batch(self):
-        for i in range(0, 12):
-            self.assertTupleEqual(
-                self.train_gen.train_batch(i),
-                (self.train_gen.window_batch(i), self.train_gen.label_batch(i)))
-        with self.assertRaises(IndexError):
-            self.train_gen.train_batch(12)
-        with self.assertRaises(RuntimeError):
-            self.test_gen.train_batch(11)
-
     def test_getitem_train(self):
         for i in range(0, 12):
-            windows, labels = self.train_gen.train_batch(i)
+            windows = self.swg.batch(i)
+            labels = self.lg[i]
             np_windows, np_labels = self.train_gen[i]
             np.testing.assert_array_equal(np.array(windows), np_windows)
             np.testing.assert_array_equal(np.array(labels), np_labels)
@@ -174,7 +179,8 @@ class TestSingleSignalWindowGenerator(unittest.TestCase):
 
     def test_getitem_wrap_train(self):
         for i in range(0, 12):
-            windows, labels = self.wrap_train_gen.train_batch(i)
+            windows = self.swg_wrap.batch(i)
+            labels = self.lg[i]
             np_windows, np_labels = self.wrap_train_gen[i]
             self.assertTupleEqual(np_windows.shape, (2, 4, 1))
             np.testing.assert_array_equal(
@@ -186,7 +192,7 @@ class TestSingleSignalWindowGenerator(unittest.TestCase):
 
     def test_getitem_test(self):
         for i in range(0, 12):
-            windows = self.test_gen.window_batch(i)
+            windows = self.swg.batch(i)
             np_windows = self.test_gen[i]
             np.testing.assert_array_equal(np.array(windows), np_windows)
         with self.assertRaises(IndexError):
@@ -194,7 +200,7 @@ class TestSingleSignalWindowGenerator(unittest.TestCase):
 
     def test_getitem_wrap_test(self):
         for i in range(0, 12):
-            windows = self.wrap_test_gen.window_batch(i)
+            windows = self.swg_wrap.batch(i)
             np_windows = self.wrap_test_gen[i]
             self.assertTupleEqual(np_windows.shape, (2, 4, 1))
             np.testing.assert_array_equal(
