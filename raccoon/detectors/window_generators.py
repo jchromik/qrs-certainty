@@ -6,12 +6,12 @@ import numpy as np
 class SingleSignalWindowGenerator(Sequence):
 
     def __init__(
-        self, signal_chunks, batch_size, window_size,
-        trigger_chunks=[], detection_size=None, wrap_samples=False
+            self, signal_chunks, batch_size, window_size,
+            trigger_chunks=[], detection_size=None, wrap_samples=False
     ):
-        self.swg = SignalWindowGenerator(
+        self.signal_windows = SignalWindowGenerator(
             signal_chunks, batch_size, window_size, wrap_samples)
-        self.lg = (
+        self.labels = (
             LabelGenerator(
                 trigger_chunks=trigger_chunks,
                 chunk_lengths=[len(chunk) for chunk in signal_chunks],
@@ -21,39 +21,39 @@ class SingleSignalWindowGenerator(Sequence):
             if trigger_chunks else None)
 
     def __getitem__(self, index):
-        windows = self.swg[index]
-        if self.lg is None:
-            return windows
-        
-        labels = self.lg[index]
+        windows = self.signal_windows[index]
+        if self.labels is None: return windows
+        labels = self.labels[index]
         return windows, labels
 
     def __len__(self):
-        return len(self.swg)
+        return len(self.signal_windows)
 
 
-class LabelGenerator:
+class LabelGenerator(Sequence):
 
     def __init__(
-        self, trigger_chunks, chunk_lengths,
-        batch_size, window_size, detection_size
+            self, trigger_chunks, chunk_lengths,
+            batch_size, window_size, detection_size
     ):
         self.trigger_signals = [
             points_to_signal(
-                points = trigger,
-                signal_length = chunk_length,
-                window_size = detection_size)
+                points=trigger,
+                signal_length=chunk_length,
+                window_size=detection_size)
             for trigger, chunk_length in zip(trigger_chunks, chunk_lengths)]
         self.chunk_lengths = chunk_lengths
         self.batch_size = batch_size
         self.window_size = window_size
 
-    def valid_chunk(self, chunk_index):
-        return chunk_index in range(0, len(self.trigger_signals))
+    def __check_index(self, chunk_index, window_index):
+        if chunk_index not in range(0, len(self.trigger_signals)):
+            raise IndexError("Chunk index out of bounds.")
 
-    def valid_window(self, chunk_index, window_index):
         chunk_length = self.chunk_lengths[chunk_index]
-        return window_index in range(0, chunk_length - self.window_size + 1)
+
+        if window_index not in range(0, chunk_length - self.window_size + 1):
+            raise IndexError("Window index out of bounds.")
 
     def index_pair(self, window_index):
         for chunk_index, chunk_length in enumerate(self.chunk_lengths):
@@ -72,12 +72,7 @@ class LabelGenerator:
             for window_index in range(start, end)]
 
     def label(self, chunk_index, window_index):
-        if not self.valid_chunk(chunk_index):
-            raise IndexError("Chunk index out of bounds.")
-
-        if not self.valid_window(chunk_index, window_index):
-            raise IndexError("Window index out of bounds.")
-
+        self.__check_index(chunk_index, window_index)
         trigger_signal = self.trigger_signals[chunk_index]
         return trigger_signal[window_index + self.window_size // 2]
 
@@ -99,19 +94,21 @@ class LabelGenerator:
 class SignalWindowGenerator(Sequence):
 
     def __init__(
-        self, signal_chunks, batch_size, window_size, wrap_samples=False
+            self, signal_chunks, batch_size, window_size, wrap_samples=False
     ):
         self.signal_chunks = signal_chunks
         self.batch_size = batch_size
         self.window_size = window_size
         self.wrap_samples = wrap_samples
 
-    def valid_chunk(self, chunk_index):
-        return chunk_index in range(0, len(self.signal_chunks))
+    def __check_index(self, chunk_index, window_index):
+        if chunk_index not in range(0, len(self.signal_chunks)):
+            raise IndexError("Chunk index out of bounds.")
 
-    def valid_window(self, chunk_index, window_index):
         chunk = self.signal_chunks[chunk_index]
-        return window_index in range(0, len(chunk) - self.window_size + 1)
+
+        if window_index not in range(0, len(chunk) - self.window_size + 1):
+            raise IndexError("Window index out of bounds.")
 
     def index_pair(self, window_index):
         for chunk_index, chunk in enumerate(self.signal_chunks):
@@ -130,17 +127,12 @@ class SignalWindowGenerator(Sequence):
             for window_index in range(start, end)]
 
     def window(self, chunk_index, window_index):
-        if not self.valid_chunk(chunk_index):
-            raise IndexError("Chunk index out of bounds.")
-
+        self.__check_index(chunk_index, window_index)
         chunk = self.signal_chunks[chunk_index]
-
-        if not self.valid_window(chunk_index, window_index):
-            raise IndexError("Window index out of bounds.")
 
         start = window_index
         end = window_index + self.window_size
-        
+
         return chunk[start:end]
 
     def windows(self, index_pairs):
