@@ -106,6 +106,9 @@ venv.bak/
 # VSCode files
 .vscode
 
+# PyCharm files
+.idea
+
 # generated files
 generated
 
