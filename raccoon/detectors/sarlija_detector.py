@@ -1,5 +1,5 @@
 from . import NNDetector
-from . import SingleSignalWindowGenerator
+from . import SingleSignalWindowGenerator, SignalWindowGenerator
 
 from keras.layers import Conv1D, Dense, Dropout, Flatten, MaxPooling1D
 from keras.models import Sequential
@@ -64,7 +64,7 @@ class SarlijaDetector(NNDetector):
     def trigger_signal(self, record):
         ecg_signal = record.p_signal.T[0]
         predictions = self.model.predict_generator(
-            generator = SingleSignalWindowGenerator(
+            generator = SignalWindowGenerator(
                 [ecg_signal], self.batch_size, self.window_size,
                 wrap_samples=True),
             use_multiprocessing=True, workers=16, max_queue_size=16)
