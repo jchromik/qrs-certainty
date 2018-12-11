@@ -1,5 +1,5 @@
 from . import NNDetector
-from . import WindowGenerator
+from . import MultiSignalWindowGenerator
 
 from keras.layers import Conv1D, Dense, Flatten, Input, MaxPooling1D
 from keras.layers.merge import concatenate
@@ -57,14 +57,17 @@ class XiangDetector(NNDetector):
 
     def train(self, records, triggers):
         ecg_signals = [record.p_signal.T[0] for record in records]
-        gen = WindowGenerator(
-            [np.ediff1d(signal) for signal in ecg_signals],
-            self.batch_size, self.window_size,
-            tpoints_list = triggers,
+        gen = MultiSignalWindowGenerator(
+            signals=[
+                [np.ediff1d(signal) for signal in ecg_signals],
+                [self.__aux_signal(signal) for signal in ecg_signals]],
+            batch_size=self.batch_size,
+            window_sizes=[
+                self.window_size,
+                self.window_size // self.aux_ratio],
+            trigger_chunks = triggers,
             detection_size = self.detection_size,
-            wrap_samples = True,
-            aux_signal_list = [self.__aux_signal(s) for s in ecg_signals],
-            aux_ratio = self.aux_ratio
+            wrap_samples = True
         )
         self.history = self.model.fit_generator(
             generator = gen, shuffle=True, epochs=self.epochs,
@@ -73,11 +76,15 @@ class XiangDetector(NNDetector):
     def trigger_signal(self, record):
         ecg_signal = record.p_signal.T[0]
         predictions = self.model.predict_generator(
-            generator = WindowGenerator(
-                [np.ediff1d(ecg_signal)], self.batch_size, self.window_size,
-                wrap_samples = True,
-                aux_signal_list = [self.__aux_signal(ecg_signal)],
-                aux_ratio = self.aux_ratio),
+            generator = MultiSignalWindowGenerator(
+                signals=[
+                    [np.ediff1d(ecg_signal)],
+                    [self.__aux_signal(ecg_signal)]],
+                batch_size=self.batch_size,
+                window_sizes=[
+                    self.window_size,
+                    self.window_size // self.aux_ratio],
+                wrap_samples = True),
             use_multiprocessing=True, workers=16, max_queue_size=16)
         return np.append(
             # zero-padding with half window size due to offset
