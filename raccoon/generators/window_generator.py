@@ -1,6 +1,8 @@
 from keras.utils import Sequence
 import numpy as np
 
+from ..utils.indexutils import index_pairs_for_batch
+
 
 class WindowGenerator(Sequence):
 
@@ -27,22 +29,10 @@ class WindowGenerator(Sequence):
         if window_index not in range(0, len(chunk) - self.window_size + 1):
             raise IndexError("Window index out of bounds.")
 
-    def index_pair(self, window_index):
-        if window_index < 0: raise IndexError("Window index negative.")
-        for chunk_index, chunk in enumerate(self.signal_chunks):
-            usable_chunk_length = len(chunk) - self.window_size
-            if window_index <= usable_chunk_length:
-                return chunk_index, window_index
-            else:
-                window_index -= (usable_chunk_length + 1)
-        raise IndexError("Window index out of bounds.")
-
     def index_pairs_for_batch(self, batch_index):
-        start = batch_index*self.batch_size
-        end = (batch_index+1)*self.batch_size
-        return [
-            self.index_pair(window_index)
-            for window_index in range(start, end)]
+        return index_pairs_for_batch(
+            batch_index, self.batch_size, self.window_size,
+            chunk_sizes=[len(chunk) for chunk in self.signal_chunks])
 
     def window(self, chunk_index, window_index):
         self.__check_index(chunk_index, window_index)

@@ -14,7 +14,7 @@ class SingleSignalWindowGenerator(Sequence):
         self.labels = (
             LabelGenerator(
                 trigger_chunks=trigger_chunks,
-                chunk_lengths=[len(chunk) for chunk in signal_chunks],
+                chunk_sizes=[len(chunk) for chunk in signal_chunks],
                 batch_size=batch_size,
                 window_size=window_size,
                 detection_size=detection_size if detection_size else window_size)

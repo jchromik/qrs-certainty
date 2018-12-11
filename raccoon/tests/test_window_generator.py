@@ -17,19 +17,6 @@ class TestWindowGenerator(unittest.TestCase):
         self.swg_wrap = WindowGenerator(
             SIGNAL_CHUNKS, batch_size=2, window_size=4, wrap_samples=True)
 
-    def test_index_pair(self):
-        self.assertTupleEqual(self.swg.index_pair(0), (0, 0))
-        self.assertTupleEqual(self.swg.index_pair(1), (0, 1))
-        self.assertTupleEqual(self.swg.index_pair(6), (0, 6))
-        self.assertTupleEqual(self.swg.index_pair(7), (1, 0))
-        self.assertTupleEqual(self.swg.index_pair(15), (1, 8))
-        self.assertTupleEqual(self.swg.index_pair(16), (2, 0))
-        self.assertTupleEqual(self.swg.index_pair(23), (2, 7))
-        with self.assertRaises(IndexError):
-            self.swg.index_pair(-1)
-        with self.assertRaises(IndexError):
-            self.swg.index_pair(24)
-
     def test_index_pairs_for_batch(self):
         self.assertListEqual(
             self.swg.index_pairs_for_batch(0),

@@ -1,12 +1,7 @@
 from keras.utils import Sequence
 
 from . import LabelGenerator, WindowGenerator
-
-
-def rescale(index_pairs, old_window_size, new_window_size):
-    return [
-        (chunk_index, (window_index*new_window_size) // old_window_size)
-        for chunk_index, window_index in index_pairs]
+from ..utils.indexutils import rescale
 
 
 class MultiSignalWindowGenerator(Sequence):
@@ -26,7 +21,7 @@ class MultiSignalWindowGenerator(Sequence):
         self.labels = (
             LabelGenerator(
                 trigger_chunks=trigger_chunks,
-                chunk_lengths=[len(chunk) for chunk in signals[0]],
+                chunk_sizes=[len(chunk) for chunk in signals[0]],
                 batch_size=batch_size,
                 window_size=window_sizes[0],
                 detection_size=detection_size if detection_size else window_sizes[0])
