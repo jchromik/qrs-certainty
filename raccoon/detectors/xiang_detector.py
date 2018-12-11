@@ -1,5 +1,5 @@
 from . import NNDetector
-from . import MultiSignalWindowGenerator
+from ..generators import MultiSignalWindowGenerator
 
 from keras.layers import Conv1D, Dense, Flatten, Input, MaxPooling1D
 from keras.layers.merge import concatenate

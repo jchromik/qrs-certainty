@@ -3,9 +3,9 @@ import unittest
 import numpy as np
 import numpy.testing as npt
 
-from raccoon.detectors import (
+from raccoon.generators import (
     SingleSignalWindowGenerator, MultiSignalWindowGenerator,
-    SignalWindowGenerator, LabelGenerator)
+    WindowGenerator, LabelGenerator)
 
 SIGNAL_CHUNKS = [
     [0.9, 0.4, 0.1, 0.2, 0.6, 0.0, 0.3, 0.5, 0.0, 0.4],
@@ -20,13 +20,13 @@ AUX_CHUNKS = [
 TRIGGER_CHUNKS = [[2, 3, 7], [2, 5, 7], [1, 7, 9]]
 
 
-class TestSignalWindowGenerator(unittest.TestCase):
+class TestWindowGenerator(unittest.TestCase):
 
     def setUp(self):
-        self.swg = SignalWindowGenerator(
+        self.swg = WindowGenerator(
             SIGNAL_CHUNKS, batch_size=2, window_size=4)
 
-        self.swg_wrap = SignalWindowGenerator(
+        self.swg_wrap = WindowGenerator(
             SIGNAL_CHUNKS, batch_size=2, window_size=4, wrap_samples=True)
 
     def test_index_pair(self):
@@ -161,10 +161,10 @@ class TestLabelGenerator(unittest.TestCase):
 class TestSingleSignalWindowGenerator(unittest.TestCase):
 
     def setUp(self):
-        self.windows = SignalWindowGenerator(
+        self.windows = WindowGenerator(
             SIGNAL_CHUNKS, batch_size=2, window_size=4)
 
-        self.windows_wrap = SignalWindowGenerator(
+        self.windows_wrap = WindowGenerator(
             SIGNAL_CHUNKS, batch_size=2, window_size=4, wrap_samples=True)
 
         self.labels = LabelGenerator(
