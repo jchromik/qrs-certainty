@@ -26,6 +26,8 @@ class TestWindowGenerator(unittest.TestCase):
         self.assertTupleEqual(self.swg.index_pair(16), (2, 0))
         self.assertTupleEqual(self.swg.index_pair(23), (2, 7))
         with self.assertRaises(IndexError):
+            self.swg.index_pair(-1)
+        with self.assertRaises(IndexError):
             self.swg.index_pair(24)
 
     def test_index_pairs_for_batch(self):

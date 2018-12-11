@@ -29,6 +29,7 @@ class LabelGenerator(Sequence):
             raise IndexError("Window index out of bounds.")
 
     def index_pair(self, window_index):
+        if window_index < 0: raise IndexError("Window index negative.")
         for chunk_index, chunk_length in enumerate(self.chunk_lengths):
             usable_chunk_length = chunk_length - self.window_size
             if window_index <= usable_chunk_length:

@@ -28,6 +28,7 @@ class WindowGenerator(Sequence):
             raise IndexError("Window index out of bounds.")
 
     def index_pair(self, window_index):
+        if window_index < 0: raise IndexError("Window index negative.")
         for chunk_index, chunk in enumerate(self.signal_chunks):
             usable_chunk_length = len(chunk) - self.window_size
             if window_index <= usable_chunk_length:

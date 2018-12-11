@@ -17,6 +17,30 @@ class TestLabelGenerator(unittest.TestCase):
             TRIGGER_CHUNKS, [len(chunk) for chunk in SIGNAL_CHUNKS],
             batch_size=2, window_size=4, detection_size=1)
 
+    def test_index_pair(self):
+        self.assertTupleEqual(self.labels.index_pair(0), (0, 0))
+        self.assertTupleEqual(self.labels.index_pair(1), (0, 1))
+        self.assertTupleEqual(self.labels.index_pair(6), (0, 6))
+        self.assertTupleEqual(self.labels.index_pair(7), (1, 0))
+        self.assertTupleEqual(self.labels.index_pair(23), (2, 7))
+        with self.assertRaises(IndexError):
+            self.labels.index_pair(-1)
+        with self.assertRaises(IndexError):
+            self.labels.index_pair(24)
+
+    def test_index_pairs_for_batch(self):
+        self.assertListEqual(
+            self.labels.index_pairs_for_batch(0),
+            [(0, 0), (0, 1)])
+        self.assertListEqual(
+            self.labels.index_pairs_for_batch(3),
+            [(0, 6), (1, 0)])
+        self.assertListEqual(
+            self.labels.index_pairs_for_batch(11),
+            [(2, 6), (2, 7)])
+        with self.assertRaises(IndexError):
+            self.labels.index_pairs_for_batch(12)
+
     def test_label(self):
         self.assertEqual(self.labels.label(0, 0), 1)
         self.assertEqual(self.labels.label(0, 1), 1)
@@ -55,3 +79,6 @@ class TestLabelGenerator(unittest.TestCase):
         self.assertListEqual(self.labels[11], [0, 1])
         with self.assertRaises(IndexError):
             self.labels[12]
+
+    def test_len(self):
+        self.assertEqual(len(self.labels), 12)
