@@ -27,17 +27,17 @@ class QRSDetector(ABC):
         pass
 
     @abstractmethod
-    def trigger_signal(self, records):
+    def trigger_signal(self, record):
         """Generate a trigger signal as intermediate representation.""" 
         pass
 
     @abstractmethod
-    def trigger(self, records):
+    def trigger(self, record):
         """Return a list of positions where QRS complexes are detected."""
         pass
 
     @abstractmethod
-    def trigger_and_signal(self, records):
+    def trigger_and_signal(self, record):
         """Returns list of QRS positions (trigger) and trigger signal with one
         prediction step.
         """
