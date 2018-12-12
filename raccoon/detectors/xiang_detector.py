@@ -1,5 +1,6 @@
 from . import NNDetector
 from ..generators import MultiSignalWindowGenerator
+from ..utils.signalutils import window_average
 
 from keras.layers import Conv1D, Dense, Flatten, Input, MaxPooling1D
 from keras.layers.merge import concatenate
@@ -57,10 +58,12 @@ class XiangDetector(NNDetector):
 
     def train(self, records, triggers):
         ecg_signals = [record.p_signal.T[0] for record in records]
+        diff_signals = [np.ediff1d(signal) for signal in ecg_signals]
+        aux_signals = [
+            np.ediff1d(window_average(signal, self.aux_ratio))
+            for signal in ecg_signals]
         gen = MultiSignalWindowGenerator(
-            signals=[
-                [np.ediff1d(signal) for signal in ecg_signals],
-                [self.__aux_signal(signal) for signal in ecg_signals]],
+            signals=[diff_signals, aux_signals],
             batch_size=self.batch_size,
             window_sizes=[
                 self.window_size,
@@ -79,7 +82,7 @@ class XiangDetector(NNDetector):
             generator = MultiSignalWindowGenerator(
                 signals=[
                     [np.ediff1d(ecg_signal)],
-                    [self.__aux_signal(ecg_signal)]],
+                    [np.ediff1d(window_average(ecg_signal, self.aux_ratio))]],
                 batch_size=self.batch_size,
                 window_sizes=[
                     self.window_size,
@@ -90,13 +93,3 @@ class XiangDetector(NNDetector):
             # zero-padding with half window size due to offset
             np.zeros(self.window_size // 2),
             predictions.flatten())
-
-    # Private
-
-    def __aux_signal(self, ecg_signal):
-        cutoff = len(ecg_signal) % self.aux_ratio
-        rectified_signal = ecg_signal if cutoff == 0 else ecg_signal[:-cutoff]
-        win_avg_signal = np.mean(
-            rectified_signal.reshape(-1, self.aux_ratio),
-            axis=1)
-        return np.ediff1d(win_avg_signal)
