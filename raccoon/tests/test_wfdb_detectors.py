@@ -5,8 +5,10 @@ import wfdb
 
 from raccoon.detectors import WfdbXQRSDetector, WfdbGQRSDetector
 
-RECORD_DIR = '/'.join([dirname(__file__), 'records'])
+THIS_DIR = dirname(__file__)
+RECORD_DIR = '/'.join([THIS_DIR, 'records'])
 RECORD_NAME = '100'
+
 
 class TestWfdbDetectors(unittest.TestCase):
 
