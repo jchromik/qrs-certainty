@@ -32,13 +32,13 @@ class XiangDetector(NNDetector):
             "\tBatch Size: {}".format(self.batch_size),
             "\tWindow Size: {}".format(self.window_size),
             "\tDetection Size: {}".format(self.detection_size),
-            "\tAux Ration: {}".format(self.aux_ratio),
+            "\tAux Ratio: {}".format(self.aux_ratio),
             "\tTraining Epochs: {}".format(self.epochs),
             "\tNumber of GPUs used: {}".format(self.gpus)])
 
     def _build_model(self):
-        visible1 = Input(shape=(60, 1))
-        visible2 = Input(shape=(60 // self.aux_ratio, 1))
+        visible1 = Input(shape=(self.window_size, 1))
+        visible2 = Input(shape=(self.window_size // self.aux_ratio, 1))
         conv1 = Conv1D(32, kernel_size=3, activation='relu')(visible1)
         conv2 = Conv1D(32, kernel_size=3, activation='relu')(visible2)
         mp1 = MaxPooling1D(pool_size=3, strides=None)(conv1)
