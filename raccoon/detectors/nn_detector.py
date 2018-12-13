@@ -31,4 +31,5 @@ class NNDetector(QRSDetector):
         signal twice.
         """
         trigger_signal = self.trigger_signal(record)
-        return trigger_signal, signal_to_points(trigger_signal)
+        trigger = signal_to_points(trigger_signal)
+        return trigger, trigger_signal

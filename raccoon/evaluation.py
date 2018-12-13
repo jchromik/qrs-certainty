@@ -50,7 +50,7 @@ class Evaluation():
 
     def _timed_detection_for(self, record):
         start_time = time()
-        signal, trigger = self.detector.trigger_and_signal(record)
+        trigger, signal = self.detector.trigger_and_signal(record)
         end_time = time()
         runtime = end_time - start_time
         self.trigger_signals.append(signal)

@@ -28,7 +28,7 @@ class TestWfdbXQRSDetector(unittest.TestCase):
 
     def test_trigger_and_signal(self):
         """Tuple of trigger (points) and (trigger) signal expected."""
-        signal, trigger = self.xqrs.trigger_and_signal(self.record)
+        trigger, signal = self.xqrs.trigger_and_signal(self.record)
         self.assertListEqual(signal, [])
         self.assertIn(max(trigger), range(0, 1000))
         self.assertIn(min(trigger), range(0, 1000))

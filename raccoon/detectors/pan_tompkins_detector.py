@@ -38,7 +38,8 @@ class PanTompkinsDetector(NonNNDetector):
 
     def trigger_and_signal(self, record):
         trigger_signal = self.__pt_signal(record)
-        return trigger_signal, self.__pt_indexes(trigger_signal)
+        trigger = self.__pt_indexes(trigger_signal)
+        return trigger, trigger_signal
 
     # Private
 

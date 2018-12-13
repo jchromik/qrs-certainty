@@ -19,4 +19,4 @@ class WfdbGQRSDetector(NonNNDetector):
             fs = record.fs)
     
     def trigger_and_signal(self, record):
-        return self.trigger_signal(record), self.trigger(record)
+        return self.trigger(record), self.trigger_signal(record)

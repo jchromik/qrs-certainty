@@ -19,7 +19,7 @@ class QRSDetector(ABC):
         """
         triggers, signals = tuple(zip(*[
             self.trigger_and_signal(record) for record in records]))
-        return list(signals), list(triggers)
+        return list(triggers), list(signals)
 
     @abstractmethod
     def train(self, records, triggers):
