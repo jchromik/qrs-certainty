@@ -17,9 +17,9 @@ class TestPanTompkinsDetectors(unittest.TestCase):
         self.record = wfdb.rdrecord('/'.join([RECORD_DIR, RECORD_NAME]))
 
     def test_str(self):
-        self.assertIn("MyPTD (PanTompkinsDetector)",
-                      str(self.ptd).splitlines()[0])
-        self.assertIn("Moving Window Size: 10", str(self.ptd).splitlines()[1])
+        splitstring = str(self.ptd).splitlines()
+        self.assertIn("MyPTD (PanTompkinsDetector)", splitstring[0])
+        self.assertIn("Moving Window Size: 10", splitstring[1])
 
     def test_trigger_signal(self):
         """Trigger signal should be approximately 1000 samples long and contain
