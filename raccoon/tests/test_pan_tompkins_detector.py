@@ -46,3 +46,8 @@ class TestPanTompkinsDetectors(unittest.TestCase):
 
         self.assertTrue(0 <= max(trigger) <= 1000)
         self.assertTrue(0 <= min(trigger) <= 1000)
+
+    def test_superfluous_functions_exist(self):
+        self.ptd.train(None, None)
+        self.ptd.reset()
+        self.ptd.save_model(None)

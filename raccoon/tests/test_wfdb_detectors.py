@@ -47,3 +47,12 @@ class TestWfdbDetectors(unittest.TestCase):
         self.assertListEqual(xqrs_signal, [])
         self.assertIn(max(xqrs_trigger), range(0, 1000))
         self.assertIn(min(xqrs_trigger), range(0, 1000))
+
+    def test_superfluous_functions_exist(self):
+        self.gqrs.train(None, None)
+        self.gqrs.reset()
+        self.gqrs.save_model(None)
+        
+        self.xqrs.train(None, None)
+        self.xqrs.reset()
+        self.xqrs.save_model(None)
