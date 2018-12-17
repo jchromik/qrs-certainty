@@ -43,7 +43,7 @@ class TestEvaluation(unittest.TestCase):
                 wfdb.rdann('/'.join([RECORD_DIR, name]), extension='atr'))
             for name in TEST_RECORD_NAMES]
         
-        cls.evaluator = Evaluation(
+        cls.evaluation = Evaluation(
             output_dir=GENERATED_DIR,
             evaluation_id=0,
             detector=cls.detector,
@@ -55,7 +55,7 @@ class TestEvaluation(unittest.TestCase):
 
         capture = StringIO()
         sys.stdout = capture
-        cls.evaluator.run()
+        cls.evaluation.run()
         sys.stdout = sys.__stdout__
 
     @classmethod
@@ -63,24 +63,24 @@ class TestEvaluation(unittest.TestCase):
         rmtree(GENERATED_DIR)
 
     def test_report(self):
-        report = self.evaluator.report()
+        report = self.evaluation.report()
         self.assertEqual(len(report), len(TEST_RECORD_NAMES))
         for entry in report:
             self.assertIsInstance(entry, OrderedDict)
 
     def test_save_annotations(self):
-        self.evaluator.save_annotations()
+        self.evaluation.save_annotations()
         for record in self.test_records:
-            file_name = self.evaluator._file_name_for(record)
+            file_name = self.evaluation._file_name_for(record)
             self.assertTrue(exists('{}/{}.atr'.format(GENERATED_DIR, file_name)))
 
     def test_save_model(self):
-        self.evaluator.save_model()
-        file_name = self.evaluator._file_name()
+        self.evaluation.save_model()
+        file_name = self.evaluation._file_name()
         self.assertTrue(exists('{}/{}.h5'.format(GENERATED_DIR, file_name)))
 
     def test_plot_detections(self):
-        self.evaluator.plot_detections(xlim=1000)
+        self.evaluation.plot_detections(xlim=1000)
         for record in self.test_records:
-            file_name = self.evaluator._file_name_for(record)
+            file_name = self.evaluation._file_name_for(record)
             self.assertTrue(exists('{}/{}.svg'.format(GENERATED_DIR, file_name)))

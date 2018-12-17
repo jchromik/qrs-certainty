@@ -1,0 +1,21 @@
+{
+    "input_dir": "../records",
+    "output_dir": "../generated/kfold",
+    "save_annotations": true,
+    "cv_method": "kfold",
+    "trigger_distance": 5,
+    "save_model": true,
+    "records": ["100", "101", "102"],
+    "plot_limit": 1000,
+    "detectors": [
+        {
+            "type": "WfdbXQRSDetector"
+        },
+        {
+            "type": "GarciaBerdonesDetector",
+            "batch_size": 32,
+            "window_size": 10,
+            "epochs": 3
+        }
+    ]
+}
