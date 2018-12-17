@@ -107,8 +107,7 @@ class TestNNDetectors(unittest.TestCase):
         self.assertNotEqual(self.xiang.model, xiang_original)
 
     def test_save_model(self):
-        rmtree(GENERATED_DIR, ignore_errors=True)
-        makedirs(GENERATED_DIR)
+        makedirs(GENERATED_DIR, exist_ok=True)
 
         garcia_path = '/'.join([GENERATED_DIR, 'garcia.h5'])
         self.garcia.save_model(garcia_path)

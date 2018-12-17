@@ -1,6 +1,5 @@
 # disable Tensorflow logging
 from os.path import dirname
-from shutil import rmtree
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import unittest
@@ -73,11 +72,6 @@ class TestDetectorFactoryMethod(unittest.TestCase):
 
 
 class TestEvaluatorFactoryMethod(unittest.TestCase):
-
-    def tearDown(self):
-        rmtree(
-            path='/'.join([dirname(__file__), 'generated']),
-            ignore_errors=True)
 
     def test_input_dir_missing(self):
         with self.assertRaises(builders.InsufficientConfiguration):

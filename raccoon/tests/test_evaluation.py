@@ -22,7 +22,7 @@ class TestEvaluation(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        makedirs(GENERATED_DIR)
+        makedirs(GENERATED_DIR, exist_ok=True)
 
         cls.detector = GarciaBerdonesDetector(
             name='MyGBD', batch_size=32, window_size=20)
