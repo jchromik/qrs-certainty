@@ -20,6 +20,14 @@ RECORD_NAMES = ['100', '101', '102']
 
 class TestNNDetectors(unittest.TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        makedirs(GENERATED_DIR, exist_ok=True)
+
+    @classmethod
+    def tearDown(cls):
+        rmtree(GENERATED_DIR, ignore_errors=True)
+
     def setUp(self):
         self.garcia = GarciaBerdonesDetector(
             name="MyGarcia", batch_size=32, window_size=20)
@@ -107,8 +115,6 @@ class TestNNDetectors(unittest.TestCase):
         self.assertNotEqual(self.xiang.model, xiang_original)
 
     def test_save_model(self):
-        makedirs(GENERATED_DIR, exist_ok=True)
-
         garcia_path = '/'.join([GENERATED_DIR, 'garcia.h5'])
         self.garcia.save_model(garcia_path)
         self.assertTrue(exists(garcia_path))
@@ -120,5 +126,3 @@ class TestNNDetectors(unittest.TestCase):
         xiang_path = '/'.join([GENERATED_DIR, 'xiang.h5'])
         self.garcia.save_model(xiang_path)
         self.assertTrue(exists(xiang_path))
-
-        rmtree(GENERATED_DIR)

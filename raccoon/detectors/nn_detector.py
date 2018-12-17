@@ -1,7 +1,10 @@
+from abc import abstractmethod
+from os.path import dirname
+from os import makedirs
+
 from . import QRSDetector
 from ..utils.triggerutils import signal_to_points
 
-from abc import abstractmethod
 
 class NNDetector(QRSDetector):
 
@@ -20,6 +23,7 @@ class NNDetector(QRSDetector):
 
     def save_model(self, path):
         """Save trained model with weights to file."""
+        makedirs(dirname(path), exist_ok=True)
         self.model.save(path)
 
     def trigger(self, record):
