@@ -69,8 +69,13 @@ class TestEvaluation(unittest.TestCase):
             self.assertIsInstance(entry, OrderedDict)
 
     def test_save_annotations(self):
+        records = self.test_records
+        triggers = self.evaluation.detected_triggers
+
         self.evaluation.save_annotations()
-        for record in self.test_records:
+        
+        for record, trigger in zip(records, triggers):
+            if not trigger: continue # no trigger found --> no file to save
             file_name = self.evaluation._file_name_for(record)
             self.assertTrue(exists('{}/{}.atr'.format(GENERATED_DIR, file_name)))
 
