@@ -1,14 +1,17 @@
+from itertools import product
 from os.path import dirname
 from random import randrange
 import unittest
 
 import numpy as np
+import numpy.testing as npt
 import wfdb
 
 import raccoon.utils.noiseutils as nu
 
 THIS_DIR = dirname(__file__)
 RECORD_DIR = '/'.join([THIS_DIR, 'records'])
+
 
 class TestNoiseUtils(unittest.TestCase):
 
@@ -17,23 +20,20 @@ class TestNoiseUtils(unittest.TestCase):
 
     def test_snr(self):
         self.assertEqual(nu.snr(
-            signal=[1, 2, 3, 2, 1], # power = 3.8
-            noise=[1, 2, 1]), # power = 2
-            1.9) # snr = power(signal) / power(noise) = 3.8/2 = 1.9
+            signal=[1, 2, 3, 2, 1],  # power = 3.8
+            noise=[1, 2, 1]),  # power = 2
+            1.9)  # snr = power(signal) / power(noise) = 3.8/2 = 1.9
 
     def test_scale(self):
-        self.assertListEqual(nu.scale([1, 2, 3, 4, 5], 2), [2, 4, 6, 8, 10])
+        npt.assert_array_equal(nu.scale([1, 2, 3, 4, 5], 2), [2, 4, 6, 8, 10])
 
     def test_repeat_until(self):
-        self.assertListEqual(nu.repeat_until([1,2,3], 7), [1, 2, 3, 1, 2, 3, 1])
-
-    def test_add_shortest(self):
-        self.assertListEqual(
-            nu.add_shortest([1, 2, 3, 4], [5, 6, 7], [8, 9, 10, 11]),
-            [14, 17, 20])
+        npt.assert_array_equal(
+            nu.repeat_until([1, 2, 3], 7),
+            [1, 2, 3, 1, 2, 3, 1])
 
     def test_add_repeating(self):
-        self.assertListEqual(
+        npt.assert_array_equal(
             nu.add_repeating([1, 2, 3, 4], [5, 6, 7], [8, 9, 10, 11]),
             [14, 17, 20, 20])
 
@@ -47,9 +47,8 @@ class TestNoiseUtils(unittest.TestCase):
             added_noise = list(np.subtract(contaminated_signal, signal))
             self.assertAlmostEqual(nu.snr(signal, added_noise), target_snr)
 
-    @unittest.expectedFailure
     def test_apply_noise_signal_record(self):
-        """Applying noise when signal is WFDB Record and noise is iterable."""
+        """Applying noise when signal is WFDB Record and noise is Iterable."""
 
         signal_names = ['100', '101', '102', '103', '104', '105']
         noise_names = [
@@ -57,7 +56,7 @@ class TestNoiseUtils(unittest.TestCase):
             'ma500', 'ma1000', 'ma2000',
             'bw500', 'bw1000', 'bw2000']
 
-        for signal_name, noise_name in zip(signal_names, noise_names):
+        for signal_name, noise_name in product(signal_names, noise_names):
             signal_record = wfdb.rdrecord('/'.join([RECORD_DIR, signal_name]))
             noise_record = wfdb.rdrecord('/'.join([RECORD_DIR, noise_name]))
 
@@ -66,23 +65,23 @@ class TestNoiseUtils(unittest.TestCase):
 
             target_snr = randrange(10) + 1
 
-            contaminated_record = nu.apply_noise(signal_record, noise, target_snr)
+            contaminated_record = nu.apply_noise(
+                signal_record, noise, target_snr)
             contaminated_signal = contaminated_record.p_signal.T[0]
 
             added_noise = list(np.subtract(contaminated_signal, signal))
             self.assertAlmostEqual(nu.snr(signal, added_noise), target_snr)
 
-    @unittest.expectedFailure
     def test_apply_noise_noise_record(self):
-        """Applying noise when signal is iterable and noise is WFDB Record."""
-        
+        """Applying noise when signal is Iterable and noise is WFDB Record."""
+
         signal_names = ['100', '101', '102', '103', '104', '105']
         noise_names = [
             'em500', 'em1000', 'em2000',
             'ma500', 'ma1000', 'ma2000',
             'bw500', 'bw1000', 'bw2000']
 
-        for signal_name, noise_name in zip(signal_names, noise_names):
+        for signal_name, noise_name in product(signal_names, noise_names):
             signal_record = wfdb.rdrecord('/'.join([RECORD_DIR, signal_name]))
             noise_record = wfdb.rdrecord('/'.join([RECORD_DIR, noise_name]))
 
@@ -91,22 +90,22 @@ class TestNoiseUtils(unittest.TestCase):
 
             target_snr = randrange(10) + 1
 
-            contaminated_signal = nu.apply_noise(signal, noise_record, target_snr)
+            contaminated_signal = nu.apply_noise(
+                signal, noise_record, target_snr)
 
             added_noise = list(np.subtract(contaminated_signal, signal))
             self.assertAlmostEqual(nu.snr(signal, added_noise), target_snr)
 
-    @unittest.expectedFailure
     def test_apply_noise_both_record(self):
         """Applying noise when signal and noise are both WFDB Records."""
-        
+
         signal_names = ['100', '101', '102', '103', '104', '105']
         noise_names = [
             'em500', 'em1000', 'em2000',
             'ma500', 'ma1000', 'ma2000',
             'bw500', 'bw1000', 'bw2000']
 
-        for signal_name, noise_name in zip(signal_names, noise_names):
+        for signal_name, noise_name in product(signal_names, noise_names):
             signal_record = wfdb.rdrecord('/'.join([RECORD_DIR, signal_name]))
             noise_record = wfdb.rdrecord('/'.join([RECORD_DIR, noise_name]))
 
@@ -115,7 +114,8 @@ class TestNoiseUtils(unittest.TestCase):
 
             target_snr = randrange(10) + 1
 
-            contaminated_record = nu.apply_noise(signal_record, noise_record, target_snr)
+            contaminated_record = nu.apply_noise(
+                signal_record, noise_record, target_snr)
             contaminated_signal = contaminated_record.p_signal.T[0]
 
             added_noise = list(np.subtract(contaminated_signal, signal))
