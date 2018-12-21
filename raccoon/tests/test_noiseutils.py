@@ -24,6 +24,12 @@ class TestNoiseUtils(unittest.TestCase):
             noise=[1, 2, 1]),  # power = 2
             1.9)  # snr = power(signal) / power(noise) = 3.8/2 = 1.9
 
+    def test_snr_to_snrdb(self):
+        self.assertEqual(nu.snr_to_snrdb(100), 20)
+
+    def test_snrdb_to_snr(self):
+        self.assertEqual(nu.snrdb_to_snr(20), 100)
+
     def test_scale(self):
         npt.assert_array_equal(nu.scale([1, 2, 3, 4, 5], 2), [2, 4, 6, 8, 10])
 
@@ -86,8 +92,6 @@ class TestNoiseUtils(unittest.TestCase):
             noise_record = wfdb.rdrecord('/'.join([RECORD_DIR, noise_name]))
 
             signal = signal_record.p_signal.T[0]
-            noise = noise_record.p_signal.T[0]
-
             target_snr = randrange(10) + 1
 
             contaminated_signal = nu.apply_noise(
@@ -110,8 +114,6 @@ class TestNoiseUtils(unittest.TestCase):
             noise_record = wfdb.rdrecord('/'.join([RECORD_DIR, noise_name]))
 
             signal = signal_record.p_signal.T[0]
-            noise = noise_record.p_signal.T[0]
-
             target_snr = randrange(10) + 1
 
             contaminated_record = nu.apply_noise(
@@ -120,3 +122,27 @@ class TestNoiseUtils(unittest.TestCase):
 
             added_noise = list(np.subtract(contaminated_signal, signal))
             self.assertAlmostEqual(nu.snr(signal, added_noise), target_snr)
+
+    def test_apply_noise_db(self):
+        """Appling noise works, when SNR is given in decibel (dB)."""
+
+        signal_names = ['100', '101', '102', '103', '104', '105']
+        noise_names = [
+            'em500', 'em1000', 'em2000',
+            'ma500', 'ma1000', 'ma2000',
+            'bw500', 'bw1000', 'bw2000']
+
+        for signal_name, noise_name in product(signal_names, noise_names):
+            signal_record = wfdb.rdrecord('/'.join([RECORD_DIR, signal_name]))
+            noise_record = wfdb.rdrecord('/'.join([RECORD_DIR, noise_name]))
+
+            signal = signal_record.p_signal.T[0]
+            target_snr_db = randrange(10) + 1
+
+            contaminated_record = nu.apply_noise_db(
+                signal_record, noise_record, target_snr_db)
+            contaminated_signal = contaminated_record.p_signal.T[0]
+
+            added_noise = list(np.subtract(contaminated_signal, signal))
+            self.assertAlmostEqual(
+                nu.snrdb(signal, added_noise), target_snr_db)
