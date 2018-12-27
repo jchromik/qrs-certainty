@@ -71,6 +71,7 @@ def _apply_noises(signals, noises, target_snr):
 
 
 def _apply_noise_record(signal, noise, target_snr):
+    """Apply noise to signal, when signal is a WFDB Record."""
     signals = signal.p_signal.T
     noises = (
         noise.p_signal.T if isinstance(noise, Record)
@@ -85,6 +86,7 @@ def _apply_noise_record(signal, noise, target_snr):
 
 
 def _apply_noise_iterable(signal, noise, target_snr):
+    """Apply noise to signal, when signal is an Iterable."""
     noise_iterable = noise.p_signal.T[0] if isinstance(
         noise, Record) else noise
     return _apply_noise(signal, noise_iterable, target_snr)
