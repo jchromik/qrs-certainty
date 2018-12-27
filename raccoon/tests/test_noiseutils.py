@@ -66,17 +66,21 @@ class TestNoiseUtils(unittest.TestCase):
             signal_record = wfdb.rdrecord('/'.join([RECORD_DIR, signal_name]))
             noise_record = wfdb.rdrecord('/'.join([RECORD_DIR, noise_name]))
 
-            signal = signal_record.p_signal.T[0]
+            signals = signal_record.p_signal.T
             noise = noise_record.p_signal.T[0]
 
             target_snr = randrange(10) + 1
 
             contaminated_record = nu.apply_noise(
                 signal_record, noise, target_snr)
-            contaminated_signal = contaminated_record.p_signal.T[0]
+            contaminated_signals = contaminated_record.p_signal.T
 
-            added_noise = list(np.subtract(contaminated_signal, signal))
-            self.assertAlmostEqual(nu.snr(signal, added_noise), target_snr)
+            self.assertEqual(len(signals), len(contaminated_signals))
+
+            for raw, contaminated in zip(signals, contaminated_signals):
+                added_noise = list(np.subtract(contaminated, raw))
+                actual_snr = nu.snr(raw, added_noise)
+                self.assertAlmostEqual(actual_snr, target_snr)
 
     def test_apply_noise_noise_record(self):
         """Applying noise when signal is Iterable and noise is WFDB Record."""
@@ -113,15 +117,19 @@ class TestNoiseUtils(unittest.TestCase):
             signal_record = wfdb.rdrecord('/'.join([RECORD_DIR, signal_name]))
             noise_record = wfdb.rdrecord('/'.join([RECORD_DIR, noise_name]))
 
-            signal = signal_record.p_signal.T[0]
+            signals = signal_record.p_signal.T
             target_snr = randrange(10) + 1
 
             contaminated_record = nu.apply_noise(
                 signal_record, noise_record, target_snr)
-            contaminated_signal = contaminated_record.p_signal.T[0]
+            contaminated_signals = contaminated_record.p_signal.T
 
-            added_noise = list(np.subtract(contaminated_signal, signal))
-            self.assertAlmostEqual(nu.snr(signal, added_noise), target_snr)
+            self.assertEqual(len(signals), len(contaminated_signals))
+
+            for raw, contaminated in zip(signals, contaminated_signals):
+                added_noise = list(np.subtract(contaminated, raw))
+                actual_snr = nu.snr(raw, added_noise)
+                self.assertAlmostEqual(actual_snr, target_snr)
 
     def test_apply_noise_db(self):
         """Appling noise works, when SNR is given in decibel (dB)."""
