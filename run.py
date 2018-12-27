@@ -39,6 +39,8 @@ def load_configuration(conf_path):
     conf_dict["output_dir"] = absify(conf_dict["output_dir"], conf_dir)
     if not "records" in conf_dict:
         conf_dict["records"] = all_records_in(conf_dict["input_dir"])
+    if not "test_records" in conf_dict:
+        conf_dict["test_records"] = []
     return namedtuple('Configuration', conf_dict.keys())(*conf_dict.values())
 
 
@@ -52,7 +54,7 @@ args = parser.parse_args()
 
 
 sys.path.append(join(dirname(__file__), "./raccoon"))
-from raccoon.utils.builders import evaluator_from_dict
+from raccoon.utils.builders import evaluator_from_dict, NameBuilder
 
 
 for configuration in args.configurations:
@@ -66,7 +68,8 @@ for configuration in args.configurations:
         if not sys.warnoptions:
             warnings.simplefilter("ignore")
 
-    evaluator = evaluator_from_dict(conf._asdict())
+    name_builder = NameBuilder()
+    evaluator = evaluator_from_dict(conf._asdict(), name_builder)
 
     if conf.cv_method == "loocv":
         evaluator.loocv()

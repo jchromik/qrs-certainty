@@ -70,7 +70,7 @@ class NameBuilder():
 class InsufficientConfiguration(Exception):
     pass
 
-def evaluator_from_dict(conf):
+def evaluator_from_dict(conf, name_builder=None):
     if not "input_dir" in conf:
         raise InsufficientConfiguration(
             "No input directory specified in configuration.")
@@ -79,7 +79,7 @@ def evaluator_from_dict(conf):
         raise InsufficientConfiguration(
             "No output directory specified in configuration.")
 
-    name_builder = NameBuilder()
+    name_builder = NameBuilder() if name_builder is None else name_builder
 
     evaluator = __call_constructor(Evaluator, conf)
     

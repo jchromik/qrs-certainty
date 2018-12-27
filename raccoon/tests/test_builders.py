@@ -106,3 +106,19 @@ class TestEvaluatorFactoryMethod(unittest.TestCase):
         self.assertEqual(evaluator.output_dir, "generated")
         self.assertEqual(evaluator.detectors[0].__class__, WfdbXQRSDetector)
         self.assertEqual(len(evaluator.records), 0)
+
+    def test_name_builder_injection(self):
+        name_builder = builders.NameBuilder()
+        conf_dict = {
+            "input_dir": "data",
+            "output_dir": "generated",
+            "detectors": [{"type": "WfdbXQRSDetector"}],
+            "records": []}
+
+        evaluator = builders.evaluator_from_dict(conf_dict, name_builder)
+
+        self.assertEqual(
+            name_builder.already_in_use[0],
+            evaluator.detectors[0].name)
+
+        self.assertEqual(len(name_builder.already_in_use), 1)
