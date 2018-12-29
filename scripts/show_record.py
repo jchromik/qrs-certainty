@@ -28,6 +28,7 @@ except FileNotFoundError:
     samples, symbols = [], []
 
 fig, axes = plt.subplots(nrows=len(signals), sharex=True)
+fig.canvas.set_window_title(args.name)
 axes = np.array(axes).reshape(-1) # in case len(signal) == 1
 
 for ax, signal in zip(axes, signals):
