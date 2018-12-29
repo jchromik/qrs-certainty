@@ -80,12 +80,14 @@ noise = wfdb.rdrecord(args.noise)
 for record_name, snr in product(args.records, args.snrs):
     record = wfdb.rdrecord(record_name)
     record = apply_noise_db(record, noise, snr)
+    
     record.record_name = noisy_recordname(record.record_name, snr)
     record.file_name = [noisy_filename(name, snr) for name in record.file_name]
+    
     record.adc(inplace=True)
     adjust_fmt(record)
     record.wrsamp(write_dir=args.destination)
+
     if args.annotations:
-        copy(
-            "{}.atr".format(record_name),
-            "{}/{}.atr".format(args.destination, record.record_name))
+        copy("{}.atr".format(record_name),
+             "{}/{}.atr".format(args.destination, record.record_name))
