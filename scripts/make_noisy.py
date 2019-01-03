@@ -93,3 +93,5 @@ for record_name, snr in product(args.records, args.snrs):
     if args.annotations:
         copy("{}.atr".format(record_name),
              "{}/{}.atr".format(args.destination, record.record_name))
+
+    print("[DONE] {}".format(record.record_name))
