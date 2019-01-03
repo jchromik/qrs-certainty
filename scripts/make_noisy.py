@@ -28,13 +28,13 @@ FMT_RANGES = OrderedDict([
 ])
 
 
-def noisy_filename(filename, snr):
+def noisy_filename(filename, noisename, snr):
     name, ext = splitext(filename)
-    return "{}e{}{}".format(name, snr, ext)
+    return "{}_{}_{}{}".format(name, noisename, snr, ext)
 
 
-def noisy_recordname(recordname, snr):
-    return "{}e{}".format(recordname, snr)
+def noisy_recordname(recordname, noisename, snr):
+    return "{}_{}_{}".format(recordname, noisename, snr)
 
 
 def adjust_fmt(record):
@@ -80,10 +80,12 @@ noise = wfdb.rdrecord(args.noise)
 for record_name, snr in product(args.records, args.snrs):
     record = wfdb.rdrecord(record_name)
     record = apply_noise_db(record, noise, snr)
-    
-    record.record_name = noisy_recordname(record.record_name, snr)
-    record.file_name = [noisy_filename(name, snr) for name in record.file_name]
-    
+
+    record.record_name = noisy_recordname(record.record_name, noise.record_name, snr)
+    record.file_name = [
+        noisy_filename(name, noise.record_name, snr)
+        for name in record.file_name]
+
     record.adc(inplace=True)
     adjust_fmt(record)
     record.wrsamp(write_dir=args.destination)
