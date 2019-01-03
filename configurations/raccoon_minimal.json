@@ -1,0 +1,30 @@
+{
+    "input_dir": "../data/mitdb",
+    "output_dir": "../generated/raccoon_minimal",
+    "save_annotations": false,
+    "cv_method": "loocv",
+    "trigger_distance": 5,
+    "save_model": false,
+    "plot_limit": 10000,
+    "records": ["100", "101", "102", "103", "104"],
+    "sampto": 10000,
+    "verbose": false,
+    "detectors": [
+        {
+            "type": "RaccoonDetector",
+            "batch_size": 32,
+            "window_size": 60,
+            "detection_size": 10,
+            "winavg_sizes": [1, 5, 10],
+            "epochs": 5
+        },
+        {
+            "type": "XiangDetector",
+            "batch_size": 32,
+            "window_size": 60,
+            "detection_size": 10,
+            "aux_ratio": 5,
+            "epochs": 5
+        }
+    ]
+}
