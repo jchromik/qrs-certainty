@@ -17,3 +17,6 @@ class TestSignalUtils(unittest.TestCase):
         npt.assert_array_equal(
             su.window_average(np.array([1, 2, 3, 4, 5]), window_size=2),
             np.array([1.5, 3.5]))
+        npt.assert_array_equal(
+            su.window_average(np.array([1, 2, 3, 4, 5]), window_size=1),
+            np.array([1, 2, 3, 4, 5]))
