@@ -22,12 +22,16 @@ class WindowGenerator(Sequence):
 
     def __check_index(self, chunk_index, window_index):
         if chunk_index not in range(0, len(self.signal_chunks)):
-            raise IndexError("Chunk index out of bounds.")
+            raise IndexError("Chunk index {} out of bounds [{},{}).".format(
+                chunk_index, 0, len(self.signal_chunks)))
 
         chunk = self.signal_chunks[chunk_index]
 
-        if window_index not in range(0, len(chunk) - self.window_size + 1):
-            raise IndexError("Window index out of bounds.")
+        usable_chunk_length = len(chunk) - self.window_size + 1
+        if window_index not in range(0, usable_chunk_length):
+            raise IndexError(
+                "Window index {} out of bounds [{},{}) in chunk {}.".format(
+                    window_index, 0, usable_chunk_length, chunk_index))
 
     def index_pairs_for_batch(self, batch_index):
         return index_pairs_for_batch(
