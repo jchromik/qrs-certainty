@@ -50,10 +50,12 @@ class TestWindowGenerator(unittest.TestCase):
         self.assertListEqual(self.swg.window(1, 8), [0.1, 0.0, 0.7, 0.2])
         self.assertListEqual(self.swg.window(2, 0), [0.5, 0.2, 0.9, 0.9])
         self.assertListEqual(self.swg.window(2, 7), [0.7, 0.9, 0.1, 0.3])
+
+        # Window index correction in case off-by-one errors
+        self.assertListEqual(self.swg.window(2, 8), self.swg.window(2, 7))
+
         with self.assertRaises(IndexError):
-            self.swg.window(2, 8)
-        with self.assertRaises(IndexError):
-            self.swg.window(0, 7)
+            self.swg.window(0, 8)
         with self.assertRaises(IndexError):
             self.swg.window(3, 0)
         with self.assertRaises(IndexError):
@@ -69,7 +71,7 @@ class TestWindowGenerator(unittest.TestCase):
             [[0.1, 0.0, 0.7, 0.2], [0.5, 0.2, 0.9, 0.9],
              [0.7, 0.9, 0.1, 0.3]])
         with self.assertRaises(IndexError):
-            self.swg.windows([(1, 8), (2, 0), (2, 8)])
+            self.swg.windows([(1, 8), (2, 0), (2, 9)])
 
     def test_batch(self):
         self.assertListEqual(

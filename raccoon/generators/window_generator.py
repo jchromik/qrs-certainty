@@ -20,18 +20,35 @@ class WindowGenerator(Sequence):
             windows.shape = (len(windows), self.window_size, 1)
         return windows
 
-    def __check_index(self, chunk_index, window_index):
-        if chunk_index not in range(0, len(self.signal_chunks)):
-            raise IndexError("Chunk index {} out of bounds [{},{}).".format(
-                chunk_index, 0, len(self.signal_chunks)))
+    def __adjust_chunk_index(self, chunk_index):
+        if chunk_index in range(len(self.signal_chunks)):
+            return chunk_index
 
+        raise IndexError("Chunk index {} out of bounds [{},{}].".format(
+            chunk_index, 0, len(self.signal_chunks)))
+
+    def __adjust_window_index(self, chunk_index, window_index):
         chunk = self.signal_chunks[chunk_index]
-
         usable_chunk_length = len(chunk) - self.window_size + 1
-        if window_index not in range(0, usable_chunk_length):
-            raise IndexError(
-                "Window index {} out of bounds [{},{}) in chunk {}.".format(
-                    window_index, 0, usable_chunk_length, chunk_index))
+        
+        if window_index in range(usable_chunk_length):
+            return window_index
+        
+        if window_index == usable_chunk_length:
+            return window_index - 1
+
+        raise IndexError(
+            "Window index {} out of bounds [{},{}] in chunk {}.".format(
+                window_index, 0, usable_chunk_length, chunk_index))
+
+    def __adjust_indexes(self, chunk_index, window_index):
+        """Sometimes we have to deal with off-by-one errors when index pairs are
+        rescaled due to e.g. window averaging. This function tries to adjust
+        indexes if necessary and possible. Otherwise it throws.
+        """
+        chunk_index = self.__adjust_chunk_index(chunk_index)
+        window_index = self.__adjust_window_index(chunk_index, window_index)
+        return chunk_index, window_index
 
     def index_pairs_for_batch(self, batch_index):
         return index_pairs_for_batch(
@@ -39,7 +56,7 @@ class WindowGenerator(Sequence):
             chunk_sizes=[len(chunk) for chunk in self.signal_chunks])
 
     def window(self, chunk_index, window_index):
-        self.__check_index(chunk_index, window_index)
+        chunk_index, window_index = self.__adjust_indexes(chunk_index, window_index)
         chunk = self.signal_chunks[chunk_index]
 
         start = window_index
