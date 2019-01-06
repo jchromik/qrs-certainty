@@ -9,7 +9,7 @@ from keras.models import Sequential, Model
 import wfdb
 
 from raccoon.detectors import (
-    GarciaBerdonesDetector, SarlijaDetector, XiangDetector)
+    GarciaBerdonesDetector, RaccoonDetector, SarlijaDetector, XiangDetector)
 from raccoon.utils.annotationutils import trigger_points
 
 THIS_DIR = dirname(__file__)
@@ -31,6 +31,9 @@ class TestNNDetectors(unittest.TestCase):
     def setUp(self):
         self.garcia = GarciaBerdonesDetector(
             name="MyGarcia", batch_size=32, window_size=20)
+        self.raccoon = RaccoonDetector(
+            name="MyRaccoon", batch_size=32, window_size=40, detection_size=10,
+            winavg_sizes=[1, 3])
         self.sarlija = SarlijaDetector(
             name="MySarlija", batch_size=32, window_size=20, detection_size=10)
         self.xiang = XiangDetector(
@@ -55,6 +58,16 @@ class TestNNDetectors(unittest.TestCase):
         self.assertIn("Window Size: 20", splitstring[2])
         self.assertIn("Training Epochs: 1", splitstring[3])
         self.assertIn("Number of GPUs used: 0", splitstring[4])
+
+    def test_str_raccoon(self):
+        splitstring = str(self.raccoon).splitlines()
+        self.assertIn("MyRaccoon (RaccoonDetector)", splitstring[0])
+        self.assertIn("Batch Size: 32", splitstring[1])
+        self.assertIn("Window Size: 40", splitstring[2])
+        self.assertIn("Detection Size: 10", splitstring[3])
+        self.assertIn("Window Average Sizes: [1, 3]", splitstring[4])
+        self.assertIn("Training Epochs: 1", splitstring[5])
+        self.assertIn("Number of GPUs used: 0", splitstring[6])
 
     def test_str_sarlija(self):
         splitstring = str(self.sarlija).splitlines()
@@ -83,7 +96,7 @@ class TestNNDetectors(unittest.TestCase):
         capture = StringIO()
         sys.stdout = capture
         
-        for detector in [self.garcia, self.sarlija, self.xiang]:
+        for detector in [self.garcia, self.raccoon, self.sarlija, self.xiang]:
             detector.train(self.records, self.triggers)
             trigger, signal = detector.trigger_and_signal(self.records[0])
 
@@ -100,17 +113,21 @@ class TestNNDetectors(unittest.TestCase):
 
     def test_build_model(self):
         self.assertIsInstance(self.garcia._build_model(), Sequential)
+        self.assertIsInstance(self.raccoon._build_model(), Model)
         self.assertIsInstance(self.sarlija._build_model(), Sequential)
         self.assertIsInstance(self.xiang._build_model(), Model)
 
     def test_reset(self):
         garcia_original = self.garcia.model
+        raccoon_original = self.raccoon.model
         sarlija_original = self.sarlija.model
         xiang_original = self.xiang.model
         self.garcia.reset()
+        self.raccoon.reset()
         self.sarlija.reset()
         self.xiang.reset()
         self.assertNotEqual(self.garcia.model, garcia_original)
+        self.assertNotEqual(self.raccoon.model, raccoon_original)
         self.assertNotEqual(self.sarlija.model, sarlija_original)
         self.assertNotEqual(self.xiang.model, xiang_original)
 
@@ -119,10 +136,14 @@ class TestNNDetectors(unittest.TestCase):
         self.garcia.save_model(garcia_path)
         self.assertTrue(exists(garcia_path))
 
+        raccoon_path = '/'.join([GENERATED_DIR, 'raccoon.h5'])
+        self.raccoon.save_model(raccoon_path)
+        self.assertTrue(exists(raccoon_path))
+
         sarlija_path = '/'.join([GENERATED_DIR, 'sarlija.h5'])
-        self.garcia.save_model(sarlija_path)
+        self.sarlija.save_model(sarlija_path)
         self.assertTrue(exists(sarlija_path))
 
         xiang_path = '/'.join([GENERATED_DIR, 'xiang.h5'])
-        self.garcia.save_model(xiang_path)
+        self.xiang.save_model(xiang_path)
         self.assertTrue(exists(xiang_path))
