@@ -11,7 +11,11 @@ class GarciaBerdonesDetector(NNDetector):
 
     # Initialization
 
-    def __init__(self, name, batch_size, window_size, epochs=1, gpus=0):
+    def __init__(
+            self, name, batch_size, window_size,
+            threshold=None, tolerance=None, epochs=1, gpus=0
+    ):
+        super().__init__(threshold=threshold, tolerance=tolerance)
         self.name = name
         self.batch_size = batch_size
         self.window_size = window_size
@@ -24,6 +28,8 @@ class GarciaBerdonesDetector(NNDetector):
             repr(self),
             "\tBatch Size: {}".format(self.batch_size),
             "\tWindow Size: {}".format(self.window_size),
+            "\tThreshold: {}".format(self.threshold),
+            "\tTolerance: {}".format(self.tolerance),
             "\tTraining Epochs: {}".format(self.epochs),
             "\tNumber of GPUs used: {}".format(self.gpus)])
 

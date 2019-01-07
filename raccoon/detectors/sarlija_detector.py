@@ -12,9 +12,10 @@ class SarlijaDetector(NNDetector):
     # Initialization
 
     def __init__(
-        self, name, batch_size, window_size, detection_size,
-        epochs=1, gpus=0
+            self, name, batch_size, window_size, detection_size,
+            threshold=None, tolerance=None, epochs=1, gpus=0
     ):
+        super().__init__(threshold=threshold, tolerance=tolerance)
         self.name = name
         self.batch_size = batch_size
         self.window_size = window_size
@@ -29,6 +30,8 @@ class SarlijaDetector(NNDetector):
             "\tBatch Size: {}".format(self.batch_size),
             "\tWindow Size: {}".format(self.window_size),
             "\tDetection Size: {}".format(self.detection_size),
+            "\tThreshold: {}".format(self.threshold),
+            "\tTolerance: {}".format(self.tolerance),
             "\tTraining Epochs: {}".format(self.epochs),
             "\tNumber of GPUs used: {}".format(self.gpus)])
 

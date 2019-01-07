@@ -14,9 +14,10 @@ class XiangDetector(NNDetector):
     # Initialization
 
     def __init__(
-        self, name, batch_size, window_size, detection_size, aux_ratio,
-        epochs=1, gpus=0
+            self, name, batch_size, window_size, detection_size, aux_ratio,
+            threshold=None, tolerance=None, epochs=1, gpus=0
     ):
+        super().__init__(threshold=threshold, tolerance=tolerance)
         self.name = name
         self.batch_size = batch_size
         self.window_size = window_size
@@ -33,6 +34,8 @@ class XiangDetector(NNDetector):
             "\tWindow Size: {}".format(self.window_size),
             "\tDetection Size: {}".format(self.detection_size),
             "\tAux Ratio: {}".format(self.aux_ratio),
+            "\tThreshold: {}".format(self.threshold),
+            "\tTolerance: {}".format(self.tolerance),
             "\tTraining Epochs: {}".format(self.epochs),
             "\tNumber of GPUs used: {}".format(self.gpus)])
 
