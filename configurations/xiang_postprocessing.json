@@ -1,0 +1,54 @@
+{
+    "input_dir": "../data/mitdb",
+    "output_dir": "../generated/xiang_postprocessing",
+    "save_annotations": false,
+    "cv_method": "k2",
+    "trigger_distance": 5,
+    "save_model": false,
+    "plot_limit": 10000,
+    "records": ["100", "101", "102", "103", "104", "105", "106", "107", "108", "109"],
+    "sampto": 10000,
+    "verbose": false,
+    "detectors": [
+        {
+            "type": "XiangDetector",
+            "batch_size": 32,
+            "window_size": 60,
+            "detection_size": 10,
+            "threshold": 0.95,
+            "tolerance": 5,
+            "aux_ratio": 5,
+            "epochs": 2
+        },
+        {
+            "type": "XiangDetector",
+            "batch_size": 32,
+            "window_size": 60,
+            "detection_size": 10,
+            "threshold": 0.8,
+            "tolerance": 5,
+            "aux_ratio": 5,
+            "epochs": 2
+        },
+        {
+            "type": "XiangDetector",
+            "batch_size": 32,
+            "window_size": 60,
+            "detection_size": 10,
+            "threshold": 0.95,
+            "tolerance": 10,
+            "aux_ratio": 5,
+            "epochs": 2
+        },
+        {
+            "type": "XiangDetector",
+            "batch_size": 32,
+            "window_size": 60,
+            "detection_size": 10,
+            "threshold": 0.8,
+            "tolerance": 10,
+            "aux_ratio": 5,
+            "epochs": 2
+        }
+    ]
+}
