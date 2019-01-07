@@ -56,8 +56,10 @@ class TestNNDetectors(unittest.TestCase):
         self.assertIn("MyGarcia (GarciaBerdonesDetector)", splitstring[0])
         self.assertIn("Batch Size: 32", splitstring[1])
         self.assertIn("Window Size: 20", splitstring[2])
-        self.assertIn("Training Epochs: 1", splitstring[3])
-        self.assertIn("Number of GPUs used: 0", splitstring[4])
+        self.assertIn("Threshold: 0.8", splitstring[3])
+        self.assertIn("Tolerance: 10", splitstring[4])
+        self.assertIn("Training Epochs: 1", splitstring[5])
+        self.assertIn("Number of GPUs used: 0", splitstring[6])
 
     def test_str_raccoon(self):
         splitstring = str(self.raccoon).splitlines()
@@ -66,8 +68,10 @@ class TestNNDetectors(unittest.TestCase):
         self.assertIn("Window Size: 40", splitstring[2])
         self.assertIn("Detection Size: 10", splitstring[3])
         self.assertIn("Window Average Sizes: [1, 3]", splitstring[4])
-        self.assertIn("Training Epochs: 1", splitstring[5])
-        self.assertIn("Number of GPUs used: 0", splitstring[6])
+        self.assertIn("Threshold: 0.8", splitstring[5])
+        self.assertIn("Tolerance: 10", splitstring[6])
+        self.assertIn("Training Epochs: 1", splitstring[7])
+        self.assertIn("Number of GPUs used: 0", splitstring[8])
 
     def test_str_sarlija(self):
         splitstring = str(self.sarlija).splitlines()
@@ -75,8 +79,10 @@ class TestNNDetectors(unittest.TestCase):
         self.assertIn("Batch Size: 32", splitstring[1])
         self.assertIn("Window Size: 20", splitstring[2])
         self.assertIn("Detection Size: 10", splitstring[3])
-        self.assertIn("Training Epochs: 1", splitstring[4])
-        self.assertIn("Number of GPUs used: 0", splitstring[5])
+        self.assertIn("Threshold: 0.8", splitstring[4])
+        self.assertIn("Tolerance: 10", splitstring[5])
+        self.assertIn("Training Epochs: 1", splitstring[6])
+        self.assertIn("Number of GPUs used: 0", splitstring[7])
 
     def test_str_xiang(self):
         splitstring = str(self.xiang).splitlines()
@@ -85,8 +91,10 @@ class TestNNDetectors(unittest.TestCase):
         self.assertIn("Window Size: 40", splitstring[2])
         self.assertIn("Detection Size: 10", splitstring[3])
         self.assertIn("Aux Ratio: 5", splitstring[4])
-        self.assertIn("Training Epochs: 1", splitstring[5])
-        self.assertIn("Number of GPUs used: 0", splitstring[6])
+        self.assertIn("Threshold: 0.8", splitstring[5])
+        self.assertIn("Tolerance: 10", splitstring[6])
+        self.assertIn("Training Epochs: 1", splitstring[7])
+        self.assertIn("Number of GPUs used: 0", splitstring[8])
 
     def test_train_and_predict(self):
         """First train, than generate trigger signal.
