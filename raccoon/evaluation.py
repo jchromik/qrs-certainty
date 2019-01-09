@@ -57,6 +57,20 @@ class Evaluation():
         self.detected_triggers.append(trigger)
         self.runtimes.append(runtime)
 
+    def _aggregated_record(self):
+        tp, tn, fp, fn = tuple(map(sum, zip(*self.metrics))) # aggregated metrics
+        runtime = sum(self.runtimes)
+        return OrderedDict([
+            ('ID', self.id),
+            ('Detector', repr(self.detector)),
+            ('Train Records', [r.record_name for r in self.train_records]),
+            ('Test Record', [r.record_name for r in self.test_records]),
+            ('TP', tp), ('TN', tn), ('FP', fp), ('FN', fn),
+            ('Sensitivity', sensitivity(tp, fn)),
+            ('PPV', ppv(tp, fp)),
+            ('F1', f1(tp, fp, fn)),
+            ('Detection Runtime', runtime)])
+
     def report(self):
         report = []
         report_data = zip(self.test_records, self.metrics, self.runtimes)
@@ -72,6 +86,7 @@ class Evaluation():
                 ('PPV', ppv(tp, fp)),
                 ('F1', f1(tp, fp, fn)),
                 ('Detection Runtime', runtime)]))
+        report.append(self._aggregated_record())
         return report
 
     # SAVING DATA TO FILES
