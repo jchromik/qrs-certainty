@@ -15,7 +15,9 @@ class XiangDetector(NNDetector):
 
     def __init__(
             self, name, batch_size, window_size, detection_size, aux_ratio,
-            threshold=None, tolerance=None, epochs=1, gpus=0
+            threshold=None, tolerance=None,
+            depth=1, width=32,
+            epochs=1, gpus=0
     ):
         super().__init__(threshold=threshold, tolerance=tolerance)
         self.name = name
@@ -23,6 +25,8 @@ class XiangDetector(NNDetector):
         self.window_size = window_size
         self.detection_size = detection_size
         self.aux_ratio = aux_ratio
+        self.depth = depth
+        self.width = width
         self.epochs = epochs
         self.gpus = gpus
         self.model = self._build_model()
@@ -42,12 +46,17 @@ class XiangDetector(NNDetector):
     def _build_model(self):
         visible1 = Input(shape=(self.window_size, 1))
         visible2 = Input(shape=(self.window_size // self.aux_ratio, 1))
-        conv1 = Conv1D(32, kernel_size=3, activation='relu')(visible1)
-        conv2 = Conv1D(32, kernel_size=3, activation='relu')(visible2)
-        mp1 = MaxPooling1D(pool_size=3, strides=None)(conv1)
-        mp2 = MaxPooling1D(pool_size=3, strides=None)(conv2)
-        fl1 = Flatten()(mp1)
-        fl2 = Flatten()(mp2)
+        prev1 = visible1
+        prev2 = visible2
+        for _ in range(self.depth):
+            conv1 = Conv1D(self.width, kernel_size=3, activation='relu')(prev1)
+            conv2 = Conv1D(self.width, kernel_size=3, activation='relu')(prev2)
+            mp1 = MaxPooling1D(pool_size=3, strides=None)(conv1)
+            mp2 = MaxPooling1D(pool_size=3, strides=None)(conv2)
+            prev1 = mp1
+            prev2 = mp1
+        fl1 = Flatten()(prev1)
+        fl2 = Flatten()(prev2)
         concatenate1 = concatenate([fl1, fl2])
         dense1 = Dense(32, activation='relu')(concatenate1)
         dense2 = Dense(1, activation='sigmoid')(dense1)
