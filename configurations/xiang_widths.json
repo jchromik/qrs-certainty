@@ -1,0 +1,61 @@
+{
+    "input_dir": "../data/noisy6",
+    "output_dir": "../generated/xiang_widths",
+    "save_annotations": false,
+    "cv_method": "k2",
+    "trigger_distance": 15,
+    "save_model": false,
+    "plot_limit": 10000,
+    "sampto": 10000,
+    "verbose": false,
+    "detectors": [
+        {
+            "type": "XiangDetector",
+            "name": "Xiang16",
+            "batch_size": 32,
+            "window_size": 90,
+            "detection_size": 30,
+            "width": 16,
+            "threshold": 0.9,
+            "tolerance": 10,
+            "aux_ratio": 5,
+            "epochs": 5
+        },
+        {
+            "type": "XiangDetector",
+            "name": "Xiang32",
+            "batch_size": 32,
+            "window_size": 90,
+            "detection_size": 30,
+            "width": 32,
+            "threshold": 0.9,
+            "tolerance": 10,
+            "aux_ratio": 5,
+            "epochs": 5
+        },
+        {
+            "type": "XiangDetector",
+            "name": "Xiang64",
+            "batch_size": 32,
+            "window_size": 90,
+            "detection_size": 30,
+            "width": 64,
+            "threshold": 0.9,
+            "tolerance": 10,
+            "aux_ratio": 5,
+            "epochs": 5
+        },
+        {
+            "type": "XiangDetector",
+            "name": "Xiang128",
+            "batch_size": 32,
+            "window_size": 90,
+            "detection_size": 30,
+            "width": 128,
+            "threshold": 0.9,
+            "tolerance": 10,
+            "aux_ratio": 5,
+            "epochs": 5
+        }
+    ]
+}
