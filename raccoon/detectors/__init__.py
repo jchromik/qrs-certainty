@@ -2,6 +2,7 @@ from .qrs_detector import QRSDetector
 from .nn_detector import NNDetector
 from .non_nn_detector import NonNNDetector
 
+from .xiang_ensemble import XiangEnsemble
 from .garcia_berdones_detector import GarciaBerdonesDetector
 from .pan_tompkins_detector import PanTompkinsDetector
 from .raccoon_detector import RaccoonDetector
