@@ -63,8 +63,12 @@ class TestEvaluation(unittest.TestCase):
         rmtree(GENERATED_DIR)
 
     def test_report(self):
+        """Report should contain one entry for each test record and one entry
+        with aggregated data. Entries should be OrderedDicts for proper
+        serialization.
+        """
         report = self.evaluation.report()
-        self.assertEqual(len(report), len(TEST_RECORD_NAMES))
+        self.assertEqual(len(report), len(TEST_RECORD_NAMES)+1)
         for entry in report:
             self.assertIsInstance(entry, OrderedDict)
 
