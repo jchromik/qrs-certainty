@@ -1,0 +1,98 @@
+{
+    "input_dir": "../data/noisy6",
+    "output_dir": "../generated/x_vs_rx",
+    "save_annotations": false,
+    "cv_method": "k2",
+    "trigger_distance": 20,
+    "save_model": false,
+    "plot_limit": 5000,
+    "sampto": 10000,
+    "verbose": false,
+    "detectors": [
+        {
+            "type": "XiangDetector",
+            "name": "XiangZeroDrop",
+            "batch_size": 32,
+            "window_size": 90,
+            "detection_size": 30,
+            "threshold": 0.9,
+            "tolerance": 10,
+            "aux_ratio": 5,
+            "epochs": 5
+        },
+        {
+            "type": "RXDetector",
+            "name": "RXHalfInputDrop",
+            "batch_size": 32,
+            "window_size": 90,
+            "detection_size": 30,
+            "input_dropout": 0.5,
+            "threshold": 0.9,
+            "tolerance": 10,
+            "aux_ratio": 5,
+            "epochs": 5
+        },
+        {
+            "type": "RXDetector",
+            "name": "RXHalfConvDrop",
+            "batch_size": 32,
+            "window_size": 90,
+            "detection_size": 30,
+            "conv_dropout": 0.5,
+            "threshold": 0.9,
+            "tolerance": 10,
+            "aux_ratio": 5,
+            "epochs": 5
+        },
+        {
+            "type": "RXDetector",
+            "name": "RXQuarterInputDrop",
+            "batch_size": 32,
+            "window_size": 90,
+            "detection_size": 30,
+            "input_dropout": 0.25,
+            "threshold": 0.9,
+            "tolerance": 10,
+            "aux_ratio": 5,
+            "epochs": 5
+        },
+        {
+            "type": "RXDetector",
+            "name": "RXQuarterConvDrop",
+            "batch_size": 32,
+            "window_size": 90,
+            "detection_size": 30,
+            "conv_dropout": 0.25,
+            "threshold": 0.9,
+            "tolerance": 10,
+            "aux_ratio": 5,
+            "epochs": 5
+        },
+        {
+            "type": "RXDetector",
+            "name": "RXQuarterInputAndConvDrop",
+            "batch_size": 32,
+            "window_size": 90,
+            "detection_size": 30,
+            "input_dropout": 0.25,
+            "conv_dropout": 0.25,
+            "threshold": 0.9,
+            "tolerance": 10,
+            "aux_ratio": 5,
+            "epochs": 5
+        },
+        {
+            "type": "RXDetector",
+            "name": "RXHalfInputAndConvDrop",
+            "batch_size": 32,
+            "window_size": 90,
+            "detection_size": 30,
+            "input_dropout": 0.5,
+            "conv_dropout": 0.5,
+            "threshold": 0.9,
+            "tolerance": 10,
+            "aux_ratio": 5,
+            "epochs": 5
+        }
+    ]
+}
