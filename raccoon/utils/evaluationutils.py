@@ -22,7 +22,7 @@ def trigger_metrics(true_trigger, detected_trigger, tolerance):
 def triggers_metrics(true_triggers, detected_triggers, tolerance):
     result = (0, 0, 0, 0)
     for true_trigger, detected_trigger in zip(true_triggers, detected_triggers):
-        metrics = trigger_metrics(true_trigger, detected_trigger, 5)
+        metrics = trigger_metrics(true_trigger, detected_trigger, tolerance)
         result = tuple(np.add(result, metrics))
     return result
 
