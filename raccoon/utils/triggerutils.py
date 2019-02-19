@@ -56,7 +56,9 @@ def spikes_to_points(spikes):
         points.append((begin + end) // 2)
     return points
 
-def signal_to_points(signal, threshold=.5, tolerance=3, with_certainty=False):
+def signal_to_points(
+        signal, threshold=.5, tolerance=3, with_certainty=False, min_width=0
+):
     """Generate trigger points from a trigger signal.
 
     Args:
@@ -67,6 +69,8 @@ def signal_to_points(signal, threshold=.5, tolerance=3, with_certainty=False):
             might be to account for the same trigger point.
         with_certainty: Whether to return how certain a QRS complex is at the
             corresponding trigger point.
+        min_width: Minimum width of a spike. Smaller spikes are ignored and not
+            converted to trigger points.
     Returns:
         List of trigger points. Also, list of certainties if with_certainty
         is True.
@@ -74,8 +78,12 @@ def signal_to_points(signal, threshold=.5, tolerance=3, with_certainty=False):
     discretized_signal = discretize(signal, threshold)
     sanitized_signal = remove_ripple(discretized_signal, tolerance)
 
-    spikes = list(signal_to_spikes(sanitized_signal))
-    
+    spikes = [
+        (begin, end)
+        for begin, end
+        in signal_to_spikes(sanitized_signal)
+        if end-begin >= min_width]
+
     points = spikes_to_points(spikes)
     if not with_certainty: return points
     
