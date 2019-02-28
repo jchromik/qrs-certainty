@@ -57,7 +57,8 @@ def spikes_to_points(spikes):
     return points
 
 def signal_to_points(
-        signal, threshold=.5, tolerance=3, with_certainty=False, min_width=0
+        signal, threshold=.5, tolerance=3, with_certainty=False,
+        spike_width=None, min_width=0
 ):
     """Generate trigger points from a trigger signal.
 
@@ -87,7 +88,7 @@ def signal_to_points(
     points = spikes_to_points(spikes)
     if not with_certainty: return points
     
-    certainties = spikes_to_certainties(spikes, signal)
+    certainties = spikes_to_certainties(spikes, signal, spike_width)
     return points, certainties
 
 # Synthesizing a trigger signal from trigger points
@@ -113,18 +114,20 @@ def points_to_signal(points, signal_length, window_size):
 
 # Certainty assessment
 
-def spikes_to_certainties(spikes, signal):
+def spikes_to_certainties(spikes, signal, spike_width=None):
     """Assess certainty of 1-spikes in a trigger signal.
 
     Args:
         spikes: List of 1-spikes in a trigger signal denoted as (begin, end).
         signal: Trigger signal.
+        spike_width: Overrides spike width with custom value. For example for
+            taking the width a spike should have into account.
     Returns:
         List of certainties.
     """
-    return [spike_certainty(spike, signal) for spike in spikes]
+    return [spike_certainty(spike, signal, spike_width) for spike in spikes]
 
-def spike_certainty(spike, signal):
+def spike_certainty(spike, signal, spike_width=None):
     """Assess certainty of a single 1-spike in a trigger signal.
     This is done by computing the mean of all signal samples in the range
     defined by the spike.
@@ -132,9 +135,12 @@ def spike_certainty(spike, signal):
     Args:
         spike: Single 1-spike denoted as (begin, end).
         signal: Trigger signal.
+        spike_width: Overrides spike width with custom value. For example for
+            taking the width a spike should have into account.
     Returns:
         Certainty of the spike in the signal, i.e. mean of signal samples in
         spike range.
     """
     begin, end = spike
-    return sum(signal[begin:end]) / (end-begin)
+    spike_width = end-begin if spike_width is None else spike_width
+    return sum(signal[begin:end]) / spike_width
