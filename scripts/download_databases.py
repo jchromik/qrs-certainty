@@ -10,7 +10,7 @@ import os
 
 databases = {
     "mitdb": {
-        "remote": "https://physionet.org/physiobank/database/mitdb",
+        "remote": "https://physionet.org/content/mitdb/1.0.0",
         "files": [
             "100", "101", "102", "103", "104", "105", "106", "107", "108", "109",
             "111", "112", "113", "114", "115", "116", "117", "118", "119",
@@ -21,20 +21,20 @@ databases = {
             "230", "231", "232", "233", "234"],
         "suffixes": ["atr", "hea", "dat"]},
     "nsrdb": {
-        "remote": "https://physionet.org/physiobank/database/nsrdb",
+        "remote": "https://physionet.org/content/nsrdb/1.0.0",
         "files": [
             "16265", "16272", "16273", "16420", "16483", "16539", "16773",
             "16786", "16795", "17052", "17453", "18177", "18184", "19088",
             "19090", "19093", "19140", "19830"],
         "suffixes": ["atr", "hea", "dat"]},
     "nstdb": {
-        "remote": "https://physionet.org/physiobank/database/nstdb",
+        "remote": "https://physionet.org/content/nstdb/1.0.0",
         "files": [
             "118e00", "118e06", "118e12", "118e18", "118e24", "118e_6",
             "119e00", "119e06", "119e12", "119e18", "119e24", "119e_6"],
         "suffixes": ["atr", "hea", "dat"]},
     "noises": {
-        "remote": "https://physionet.org/physiobank/database/nstdb",
+        "remote": "https://physionet.org/content/nstdb/1.0.0",
         "files": ["em", "ma", "bw"],
         "suffixes": ["hea", "dat"]}}
 
