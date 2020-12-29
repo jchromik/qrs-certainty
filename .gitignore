@@ -109,8 +109,9 @@ venv.bak/
 # PyCharm files
 .idea
 
-# generated files
-generated
+# generated figures
+*.pdf
+*.png
 
 # ecg data
 data
