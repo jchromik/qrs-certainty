@@ -17,7 +17,9 @@ def _filter(positions, labels, keep=BEAT_CLASSIFIERS):
     filtered_labels = [val for idx, val in enumerate(labels) if labels[idx] in keep]
     return filtered_positions, filtered_labels
 
-def trigger_points(annotation):
+def trigger_points(annotation, with_labels=False):
     positions, labels = _extract(annotation)
-    positions, _ = _filter(positions, labels)
+    positions, labels = _filter(positions, labels)
+    if with_labels:
+        return positions, labels
     return positions
