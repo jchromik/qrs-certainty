@@ -7,7 +7,7 @@ def merge(true_trigger, detected_trigger, tolerance):
             if abs(detected_point - true_point) <= tolerance]
         
         if len(matches) == 0:
-            yield (true_point, None, 'FN')
+            yield (true_point, np.nan, 'FN')
             continue
             
         matches.sort(key=lambda m: abs(true_point - m))
@@ -22,7 +22,7 @@ def merge(true_trigger, detected_trigger, tolerance):
             if abs(true_point - detected_point) <= tolerance]
         
         if len(matches) == 0:
-            yield (None, detected_point, 'FP')
+            yield (np.nan, detected_point, 'FP')
 
 def trigger_metrics(true_trigger, detected_trigger, tolerance):
     tp, tn, fp, fn = 0, 0, 0, 0
