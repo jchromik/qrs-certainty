@@ -1,9 +1,6 @@
-[![Build Status](https://travis-ci.org/jchromik/raccoon.svg?branch=master)](https://travis-ci.org/jchromik/raccoon?branch=master)
-[![Coverage Status](https://coveralls.io/repos/github/jchromik/raccoon/badge.svg?branch=master)](https://coveralls.io/github/jchromik/raccoon?branch=master)
+# QRS Certainty
 
-# Project Raccoon
-
-This is part of my master's thesis. I evaluate how neural networks perform on the task of finding QRS complexes in single-channel ECG signals of varying signal quality. The name (raccoon) has no further meaning, I just like raccoons and needed a name. Think of a zealous raccoon searching for QRS complexes!
+We evaluate how neural networks perform on the task of finding QRS complexes in single-channel ECG signals of varying signal quality.
 
 ## What is this?
 
@@ -12,77 +9,30 @@ Some of these detectors employ neural networks and need a training step, some ot
 
 ## How to use this?
 
-For using this, three steps are to be performed:
-1. Install requirements
-2. Download databases
-3. Run evaluation
+First, you need to download the ECG databases in use.
 
-### Install Requirements
+You just need:
 
-You need Python3 and PIP. Everything else is easily done with:
-```shell
-pip install -r requirements.txt
-```
-
-### Download Databases
-
-We provide a Python script for doing this. Call `scripts/download_databases.py` and specify which databases you want to get.
-
-We support:
  * MIT-BIH Arrhythmia Database (`mitdb`)
- * MIT-BIH Normal Sinus Rhythm Database (`nsrdb`)
  * MIT-BIH Noise Stress Test Database (`nstdb`)
 
-For example, for downloading the `mitdb` to a directory called `data`:
-```shell
-scripts/download_databases.py -d data -k mitdb
-```
-
-For more noise contaminated data use `scripts/noisy_mitdb.py`. This script uses [`nst`](https://www.physionet.org/physiotools/wag/nst-1.htm) from the [WFDB software package](https://www.physionet.org/physiotools/wag/) to create noisy records from all `mitdb` records using the electrode motion `em` noise template from `nstdb`.
+This is easily done by:
 
 ```shell
-scripts/noisy_mitdb.py # writes records to current working directory 
+wget -r -N -c -np https://physionet.org/files/mitdb/1.0.0/
+wget -r -N -c -np https://physionet.org/files/nstdb/1.0.0/
 ```
 
-### Run Evaluation
+Then you can explore the Jupyter notebooks in the `notebooks` folder.
 
-Call `run.py` specifying a configuration file. Configurations files tell the evaluator what to do. You can find example configuration files in the `configurations` directory. Feel free to change them according to needs and research questions. Parameters specified in the configuration file are the same the constructors of Evaluator and Detector classes take, so you can use them as reference.
+## Which detectors do we employ?
 
-Example call:
-```shell
-./run.py configurations/example01.json
-```
-
-### Run in a Docker Container
-
-The Dockerfile is made for building Docker images to run on GPU machines. Hence, `nvidia-docker` is required to build images.
-In the root directory of this repository run:
-
-```shell
-nvidia-docker build -t raccoon:latest .
-```
-
-To start a container running this image:
-
-```shell
-nvidia-docker run -it raccoon bash
-```
-
-From there you can call `run.py` as described above.
-
-## Which detectors do we compare?
-
-We use three NN-based detectors and three signal processing based detectors.
-
-The NN-based detectors use neural network architectures proposed by the following papers:
+We use three NN-based detectors proposed by the following papers:
  * C. García-Berdonés, J. Narváez, U. Fernández, and F. Sandoval, “A new QRS detector based on neural network,” in Biological and Artificial Computation: From Neuroscience to Technology, 1997, pp. 1260–1269.
  * M. Šarlija, F. Jurišić, and S. Popović, “A convolutional neural network based approach to QRS detection,” in Proceedings of the 10th
  International Symposium on Image and Signal Processing and Analysis, 2017, pp. 121–125.
  * Y. Xiang, Z. Lin, and J. Meng, “Automatic QRS complex detection using two-level convolutional neural network,” Biomed Eng Online, vol. 17, Jan. 2018.
 
- The signal processing based detectors are GQRS and XQRS by MIT's [wdfb](https://github.com/MIT-LCP/wfdb-python) Python module and a handwritten version of the Pan-Tompkins algorithms.
- 
- Cf.: J. Pan and W. J. Tompkins, “A Real-Time QRS Detection Algorithm,” IEEE Transactions on Biomedical Engineering, vol. BME-32, no. 3, pp. 230–236, Mar. 1985.
 
 ## How do we compare?
 
