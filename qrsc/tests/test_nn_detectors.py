@@ -8,9 +8,9 @@ from io import StringIO
 from keras.models import Sequential, Model
 import wfdb
 
-from raccoon.detectors import (
+from qrsc.detectors import (
     GarciaBerdonesDetector, RaccoonDetector, SarlijaDetector, XiangDetector)
-from raccoon.utils.annotationutils import trigger_points
+from qrsc.utils.annotationutils import trigger_points
 
 THIS_DIR = dirname(__file__)
 GENERATED_DIR = '/'.join([THIS_DIR, 'generated'])

@@ -7,7 +7,7 @@ import numpy as np
 import numpy.testing as npt
 import wfdb
 
-import raccoon.utils.noiseutils as nu
+import qrsc.utils.noiseutils as nu
 
 THIS_DIR = dirname(__file__)
 RECORD_DIR = '/'.join([THIS_DIR, 'records'])

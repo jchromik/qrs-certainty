@@ -1,6 +1,6 @@
 import unittest
 
-import raccoon.utils.indexutils as iu
+import qrsc.utils.indexutils as iu
 
 
 class TestIndexUtils(unittest.TestCase):

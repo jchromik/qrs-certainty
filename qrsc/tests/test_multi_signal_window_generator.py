@@ -2,7 +2,7 @@ import unittest
 
 import numpy.testing as npt
 
-from raccoon.generators import MultiSignalWindowGenerator
+from qrsc.generators import MultiSignalWindowGenerator
 
 SIGNAL_CHUNKS = [
     [0.9, 0.4, 0.1, 0.2, 0.6, 0.0, 0.3, 0.5, 0.0, 0.4],

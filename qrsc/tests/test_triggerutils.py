@@ -1,6 +1,6 @@
 import unittest
 
-from raccoon.utils import triggerutils as tu
+from qrsc.utils import triggerutils as tu
 
 class TestTriggerUtils(unittest.TestCase):
 

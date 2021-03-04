@@ -6,7 +6,7 @@ import json
 import sys
 import unittest
 
-from raccoon.utils.builders import evaluator_from_dict
+from qrsc.utils.builders import evaluator_from_dict
 
 THIS_DIR = dirname(__file__)
 

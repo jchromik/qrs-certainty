@@ -3,7 +3,7 @@ import unittest
 
 import wfdb
 
-from raccoon.detectors import WfdbXQRSDetector
+from qrsc.detectors import WfdbXQRSDetector
 
 THIS_DIR = dirname(__file__)
 RECORD_DIR = '/'.join([THIS_DIR, 'records'])

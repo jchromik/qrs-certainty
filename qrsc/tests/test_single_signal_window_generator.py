@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 import numpy.testing as npt
 
-from raccoon.generators import (
+from qrsc.generators import (
     SingleSignalWindowGenerator, WindowGenerator, LabelGenerator)
 
 SIGNAL_CHUNKS = [

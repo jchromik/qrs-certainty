@@ -3,7 +3,7 @@ import unittest
 from os.path import dirname
 import wfdb
 
-from raccoon.detectors import PanTompkinsDetector
+from qrsc.detectors import PanTompkinsDetector
 
 THIS_DIR = dirname(__file__)
 RECORD_DIR = '/'.join([THIS_DIR, 'records'])

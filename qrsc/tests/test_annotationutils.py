@@ -1,6 +1,6 @@
 import unittest
 from collections import namedtuple
-from raccoon.utils import annotationutils as au
+from qrsc.utils import annotationutils as au
 
 AnnotationMock = namedtuple('AnnotationMock', ['sample', 'symbol'])
 

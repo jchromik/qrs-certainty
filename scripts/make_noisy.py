@@ -10,8 +10,8 @@ import sys
 
 import wfdb
 
-sys.path.append("../raccoon")
-from raccoon.utils.noiseutils import apply_noise_db
+sys.path.append("../qrsc")
+from qrsc.utils.noiseutils import apply_noise_db
 
 
 # SOURCE:

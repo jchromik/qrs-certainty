@@ -8,9 +8,9 @@ import unittest
 
 import wfdb
 
-from raccoon.utils.annotationutils import trigger_points
-from raccoon.evaluation import Evaluation
-from raccoon.detectors import GarciaBerdonesDetector
+from qrsc.utils.annotationutils import trigger_points
+from qrsc.evaluation import Evaluation
+from qrsc.detectors import GarciaBerdonesDetector
 
 THIS_DIR = dirname(__file__)
 GENERATED_DIR = '/'.join([THIS_DIR, 'generated'])

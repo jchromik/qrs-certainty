@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 import numpy.testing as npt
 
-import raccoon.utils.signalutils as su
+import qrsc.utils.signalutils as su
 
 
 class TestSignalUtils(unittest.TestCase):

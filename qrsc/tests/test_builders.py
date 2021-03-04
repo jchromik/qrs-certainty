@@ -4,8 +4,8 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import unittest
 
-from raccoon.detectors import GarciaBerdonesDetector, WfdbXQRSDetector
-from raccoon.utils import builders
+from qrsc.detectors import GarciaBerdonesDetector, WfdbXQRSDetector
+from qrsc.utils import builders
 
 class TestNameBuilder(unittest.TestCase):
 

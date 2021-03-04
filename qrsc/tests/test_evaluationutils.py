@@ -1,7 +1,7 @@
 import math
 import unittest
 
-from raccoon.utils import evaluationutils as eu
+from qrsc.utils import evaluationutils as eu
 
 class TestEvaluationUtils(unittest.TestCase):
 
